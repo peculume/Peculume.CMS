@@ -1,0 +1,90 @@
+/* Base CSS Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  // font-family: sans-serif, Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  background-color: var(--bg-color, #f8f9fa); /* Using the $bg-color variable */
+  color: var(--text-color, #333); /* Using the $text-color variable */
+  height: 100%;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: '';
+}
+
+code {
+  font-family: monospace, monospace;
+}
+
+/* Utility Classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+}
+
+/* Spacing helpers */
+.spacing-sm {
+  margin: calc(var(--spacing-base) / 2); /* Using the $spacing-base variable */
+}
+
+.spacing-md {
+  margin: var(--spacing-base);
+}
+
+.spacing-lg {
+  margin: calc(var(--spacing-base) * 2);
+}
