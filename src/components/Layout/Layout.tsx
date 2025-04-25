@@ -9,7 +9,7 @@ type LayoutProps = {
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <div className={styles.layoutContainer}>
-      <header>
+      <header className={styles.layoutHeaderContainer}>
         <Link to="/">
           <h1>Peculume CMS</h1>
         </Link>
