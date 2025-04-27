@@ -9,3 +9,7 @@ export type Tag = {
   tagId: string | number;
   name: string;
 };
+
+export type ApiError = {
+  message: string;
+};

@@ -1,7 +1,7 @@
 import { FC, FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Product, Tag } from "types/productTypes";
+import { ApiError, Product, Tag } from "types/productTypes";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import styles from "./ProductForm.module.scss";
 
@@ -18,6 +18,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   useQuery({
     queryKey: ["getTags"],
@@ -55,11 +57,15 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       });
 
       if (!response.ok) {
-        throw `Error update product: ${response.status}`;
+        const error = await response.json() as ApiError;
+        throw error;
       }
 
       return await response.json() as Product;
     },
+    onError: (error: ApiError) => {
+      setErrorMessage(error.message);
+    }
   });
 
   const { mutate: createProduct } = useMutation({
@@ -79,7 +85,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       });
 
       if (!response.ok) {
-        throw `Error update product: ${response.status}`;
+        const error = await response.json() as ApiError;
+        throw error;
       }
 
       return await response.json() as Product;
@@ -87,6 +94,9 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getProducts"] })
       navigate("/products");
+    },
+    onError: (error: ApiError) => {
+      setErrorMessage(error.message);
     }
   });
 
@@ -161,6 +171,9 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         </div>
       </div>
       <input className={styles.submitButton} type="submit" value="Save" />
+      {errorMessage && (
+        <p className="error">{errorMessage}</p>
+      )}
     </form>
   );
 };
