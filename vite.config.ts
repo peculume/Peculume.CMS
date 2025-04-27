@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       api: path.resolve(__dirname, "src/api"),
       components: path.resolve(__dirname, "src/components"),
+      modals: path.resolve(__dirname, "src/modals"),
       pages: path.resolve(__dirname, "src/pages"),
       types: path.resolve(__dirname, "src/types"),
     },

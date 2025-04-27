@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, Product, Tag } from "types/productTypes";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import styles from "./ProductForm.module.scss";
+import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 
 type ProductFormTypes = {
   product?: Product;
@@ -37,7 +38,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       const filtered = resp.filter(tag => !tags.some(t => t.tagId === tag.tagId));
       setAvailableTags(filtered);
       return resp;
-    }
+    },
+    staleTime: 1000 * 60 * 5,
   })
 
   const { mutate: updateProduct } = useMutation({
@@ -126,19 +128,19 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
   return (
     <form className={styles.form} onSubmit={handleOnSubmit}>
-      <div className={styles.formGroup}>
+      <div className="formGroup">
         <label htmlFor="name">Name</label>
         <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
-      <div className={styles.formGroup}>
+      <div className="formGroup">
         <label htmlFor="slug">Slug</label>
         <input id="slug" type="text" value={slug} onChange={(e) => setSlug(e.target.value)} />
       </div>
-      <div className={styles.formGroup}>
+      <div className="formGroup">
         <label htmlFor="description">Description</label>
         <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
       </div>
-      <div className={styles.formGroup}>
+      <div className="formGroup">
         <label htmlFor="tags">Tags</label>
         <div className={styles.selectedTags}>
           {tags.map((tag) => (
@@ -165,9 +167,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
               ))}
             </select>
           )}
-          <button type="button">
-            Create tag
-          </button>
+          <CreateTagModal />
         </div>
       </div>
       <input className={styles.submitButton} type="submit" value="Save" />
