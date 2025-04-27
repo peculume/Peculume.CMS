@@ -60,3 +60,14 @@ table {
     background-color: #e9ecef;
   }
 }
+
+a {
+  text-decoration: none;
+  transition: color 0.3s, text-decoration 0.3s;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    outline: none;
+  }
+}

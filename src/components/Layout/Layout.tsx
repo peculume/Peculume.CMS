@@ -15,7 +15,12 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         </Link>
       </header>
       <div className={styles.layoutBodyContainer}>
-        {children}
+        <div className={styles.layoutSidebarContainer}>
+          <Link to={"/products"}>Products</Link>
+        </div>
+        <div className={styles.layoutPageContainer}>
+          {children}
+        </div>
       </div>
     </div>
   );
