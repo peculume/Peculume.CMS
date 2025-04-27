@@ -46,7 +46,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           name,
           slug,
           description,
-          tags: tags.map(({ tagId }) => tagId),
+          tagIds: tags.map(({ tagId }) => tagId),
         }),
       });
 
@@ -102,7 +102,20 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="tags">Tags</label>
-
+        <div className={styles.selectedTags}>
+          {tags.map((tag) => (
+            <div key={tag.tagId} className={styles.tagItem}>
+              {tag.name}
+              <button
+                type="button"
+                className={styles.removeTagButton}
+                onClick={() => handleRemoveTag(tag)}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
         <div className={styles.tagSelector}>
           {availableTags.length > 0 && (
             <select id="tags" onChange={handleTagSelect}>
@@ -117,21 +130,6 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           <button type="button">
             Create tag
           </button>
-        </div>
-
-        <div className={styles.selectedTags}>
-          {tags.map((tag) => (
-            <div key={tag.tagId} className={styles.tagItem}>
-              {tag.name}
-              <button
-                type="button"
-                className={styles.removeTagButton}
-                onClick={() => handleRemoveTag(tag)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
         </div>
       </div>
       <input className={styles.submitButton} type="submit" value="Save" />
