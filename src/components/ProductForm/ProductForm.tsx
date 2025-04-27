@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import { FC, FormEvent, FormEventHandler, useState } from "react";
 import { Product, Tag } from "types/productTypes";
 import styles from "./ProductForm.module.scss";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 
 type ProductFormTypes = {
@@ -9,7 +9,7 @@ type ProductFormTypes = {
 }
 
 const ProductForm: FC<ProductFormTypes> = ({ product }) => {
-  const [title, setTitle] = useState(product?.name ?? '');
+  const [name, setName] = useState(product?.name ?? '');
   const [slug, setSlug] = useState(product?.slug ?? '');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState(product?.tags ?? []);
@@ -25,7 +25,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         },
       });
       if (!response.ok) {
-        throw `Error fetching products: ${response.status}`;
+        throw `Error fetching tags: ${response.status}`;
       }
       const resp = await response.json() as Tag[];
       const filtered = resp.filter(tag => !tags.some(t => t.tagId === tag.tagId));
@@ -34,6 +34,36 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     }
   })
 
+  const { mutate: updateProduct } = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/products/${product?.productId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+        },
+        body: JSON.stringify({
+          name,
+          slug,
+          description,
+          tags: tags.map(({ tagId }) => tagId),
+        }),
+      });
+
+      if (!response.ok) {
+        throw `Error update product: ${response.status}`;
+      }
+
+      return await response.json() as Product;
+    },
+    onError: (error) => {
+
+    },
+    onSuccess: () => {
+
+    },
+  });
+
   const handleTagSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedTagId = e.target.value;
     const selectedTag = availableTags.find(tag => tag.tagId == selectedTagId);
@@ -41,15 +71,26 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       setTags(prev => [...prev, selectedTag]);
       setAvailableTags(prev => prev.filter(tag => tag.tagId != selectedTagId));
     }
-    // Reset the select back to default (optional)
     e.target.selectedIndex = 0;
   };
 
+  const handleRemoveTag = (tagToRemove: Tag) => {
+    setTags(prev => prev.filter(tag => tag.tagId !== tagToRemove.tagId));
+    setAvailableTags(prev => [...prev, tagToRemove]);
+  };
+
+  const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (product) {
+      updateProduct();
+    }
+  }
+
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleOnSubmit}>
       <div className={styles.formGroup}>
-        <label htmlFor="title">Title</label>
-        <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <label htmlFor="name">Name</label>
+        <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="slug">Slug</label>
@@ -80,9 +121,16 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
         <div className={styles.selectedTags}>
           {tags.map((tag) => (
-            <span key={tag.tagId} className={styles.tagItem}>
+            <div key={tag.tagId} className={styles.tagItem}>
               {tag.name}
-            </span>
+              <button
+                type="button"
+                className={styles.removeTagButton}
+                onClick={() => handleRemoveTag(tag)}
+              >
+                ×
+              </button>
+            </div>
           ))}
         </div>
       </div>

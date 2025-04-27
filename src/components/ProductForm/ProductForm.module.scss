@@ -53,11 +53,39 @@
 }
 
 .tagItem {
+  position: relative;
   background-color: #f0f0f0;
   padding: 0.25rem 0.75rem;
+  padding-right: 1.5rem;
   border-radius: 16px;
   font-size: 0.85rem;
   border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+}
+
+.removeTagButton {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+
+  &:hover {
+    background: #e60000;
+  }
 }
   
 .submitButton {
