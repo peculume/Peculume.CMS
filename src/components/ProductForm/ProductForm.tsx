@@ -1,14 +1,18 @@
-import { FC, FormEvent, FormEventHandler, useState } from "react";
+import { FC, FormEvent, useState } from "react";
+import { useNavigate } from "react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Product, Tag } from "types/productTypes";
-import styles from "./ProductForm.module.scss";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
+import styles from "./ProductForm.module.scss";
 
 type ProductFormTypes = {
   product?: Product;
 }
 
 const ProductForm: FC<ProductFormTypes> = ({ product }) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const [name, setName] = useState(product?.name ?? '');
   const [slug, setSlug] = useState(product?.slug ?? '');
   const [description, setDescription] = useState('');
@@ -56,12 +60,34 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
       return await response.json() as Product;
     },
-    onError: (error) => {
+  });
 
+  const { mutate: createProduct } = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/products/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+        },
+        body: JSON.stringify({
+          name,
+          slug,
+          description,
+          tagIds: tags.map(({ tagId }) => tagId),
+        }),
+      });
+
+      if (!response.ok) {
+        throw `Error update product: ${response.status}`;
+      }
+
+      return await response.json() as Product;
     },
     onSuccess: () => {
-
-    },
+      queryClient.invalidateQueries({ queryKey: ["getProducts"] })
+      navigate("/products");
+    }
   });
 
   const handleTagSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -83,6 +109,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     e.preventDefault();
     if (product) {
       updateProduct();
+    } else {
+      createProduct();
     }
   }
 

@@ -20,7 +20,8 @@ const ProductTable = () => {
       }
       const resp = await response.json() as Product[];
       return resp;
-    }
+    },
+    staleTime: 1000 * 60 * 5,
   })
 
   return (
