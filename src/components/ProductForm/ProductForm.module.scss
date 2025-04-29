@@ -56,6 +56,13 @@
     background: #e60000;
   }
 }
+
+.buttonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 15px;
+}
   
 .submitButton {
   align-self: flex-start;

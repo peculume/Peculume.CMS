@@ -102,6 +102,30 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     }
   });
 
+  const { mutate: deleteProduct } = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/products/${product?.productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json() as ApiError;
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getProducts"] })
+      navigate("/products");
+    },
+    onError: (error: ApiError) => {
+      setErrorMessage(error.message);
+    }
+  });
+
   const handleTagSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedTagId = e.target.value;
     const selectedTag = availableTags.find(tag => tag.tagId == selectedTagId);
@@ -170,10 +194,17 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           <CreateTagModal />
         </div>
       </div>
-      <input className={styles.submitButton} type="submit" value="Save" />
-      {errorMessage && (
-        <p className="error">{errorMessage}</p>
-      )}
+      <div>
+        <div className={styles.buttonsContainer}>
+          {product && (
+            <button className="danger" onClick={() => deleteProduct()}>Delete</button>
+          )}
+          <input className={styles.submitButton} type="submit" value="Save" />
+        </div>
+        {errorMessage && (
+          <p className="error">{errorMessage}</p>
+        )}
+      </div>
     </form>
   );
 };

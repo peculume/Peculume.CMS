@@ -32,6 +32,19 @@ button {
     color: #6c757d;
     cursor: not-allowed;
   }
+
+  &.danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+
+    &:hover,
+    &:focus {
+      background-color: #c82333;
+      border-color: #bd2130;
+      color: #fff;
+    }
+  }
 }
 
 table {
