@@ -1,10 +1,11 @@
 import { FC, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiError, Product, Tag } from "types/productTypes";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
-import styles from "./ProductForm.module.scss";
+import { useGetTags } from "hooks/TagHooks/TagHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
+import styles from "./ProductForm.module.scss";
 
 type ProductFormTypes = {
   product?: Product;
@@ -22,24 +23,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { data: dataTags = [] } = useQuery({
-    queryKey: ["getTags"],
-    queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/tags/`, {
-        method: 'GET',
-        headers: {
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
-        },
-      });
-      if (!response.ok) {
-        throw `Error fetching tags: ${response.status}`;
-      }
-      const resp = await response.json() as Tag[];
-
-      return resp;
-    },
-    staleTime: 1000 * 60 * 5,
-  })
+  const { tags: dataTags } = useGetTags();
 
   useEffect(() => {
     const filtered = dataTags.filter(tag => !tags.some(t => t.tagId === tag.tagId));

@@ -1,44 +1,34 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Dialog } from "radix-ui";
-import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
+import { useCreateTag, useGetTags } from "hooks/TagHooks/TagHooks";
 import styles from "./CreateTagModal.module.scss";
-import { ApiError, Tag } from "types/productTypes";
 
 const CreateTagModal = () => {
-  const queryClient = useQueryClient();
 
   const [open, setOpen] = useState(false);
   const [tag, setTag] = useState("");
+  const [error, setError] = useState("");
 
-  const { mutate: createTag } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/tags/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
-        },
-        body: JSON.stringify({
-          tagName: tag,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json() as ApiError;
-        throw error;
-      }
-
-      return await response.json() as Tag;
-    },
+  const { tags } = useGetTags();
+  const { createTag } = useCreateTag({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getTags"] })
       setTag("");
     },
-    onError: (error: ApiError) => {
-      // setErrorMessage(error.message);
+    onError: (error) => {
+      setError(error.message);
     }
   });
+
+  const trimmedTag = tag.trim();
+  const isDuplicate =
+    !!tags?.some(t => t.name.toLowerCase() === trimmedTag.toLowerCase());
+
+  const isInvalid = trimmedTag.length === 0 || isDuplicate;
+
+  const handleSubmit = () => {
+    setError("");
+    createTag(tag);
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen} >
@@ -57,12 +47,14 @@ const CreateTagModal = () => {
               Tag
             </label>
             <input className="Input" id="tag" value={tag} onChange={(e) => setTag(e.target.value)} />
+            {isDuplicate && <p className="error">That tag already exists.</p>}
+            {error && <p className="error">{error}</p>}
           </div>
           <div
             style={{ display: "flex", marginTop: 25, justifyContent: "flex-end" }}
           >
             <Dialog.Close asChild>
-              <button onClick={() => createTag()}>Create</button>
+              <button disabled={isInvalid || isDuplicate} onClick={handleSubmit}>Create</button>
             </Dialog.Close>
           </div>
         </Dialog.Content>
