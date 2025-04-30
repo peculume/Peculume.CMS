@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, Product, Tag } from "types/productTypes";
@@ -22,7 +22,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  useQuery({
+  const { data: dataTags = [] } = useQuery({
     queryKey: ["getTags"],
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/tags/`, {
@@ -35,12 +35,16 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         throw `Error fetching tags: ${response.status}`;
       }
       const resp = await response.json() as Tag[];
-      const filtered = resp.filter(tag => !tags.some(t => t.tagId === tag.tagId));
-      setAvailableTags(filtered);
+
       return resp;
     },
     staleTime: 1000 * 60 * 5,
   })
+
+  useEffect(() => {
+    const filtered = dataTags.filter(tag => !tags.some(t => t.tagId === tag.tagId));
+    setAvailableTags(filtered);
+  }, [dataTags])
 
   const { mutate: updateProduct } = useMutation({
     mutationFn: async () => {
@@ -64,6 +68,10 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       }
 
       return await response.json() as Product;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getProducts"] })
+      queryClient.invalidateQueries({ queryKey: ["getProduct", product?.productId.toString()] })
     },
     onError: (error: ApiError) => {
       setErrorMessage(error.message);
