@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+import { format } from "date-fns";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { Product } from "types/productTypes";
 
@@ -29,6 +30,7 @@ const ProductTable = () => {
       <thead>
         <tr>
           <th>Product</th>
+          <th>Last updated</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -40,6 +42,7 @@ const ProductTable = () => {
             data-clickable
           >
             <td>{product.name}</td>
+            <td>{format(new Date(product.lastModifiedAt), "dd MMM yyyy HH:mm")}</td>
             <td>Active | Draft | Hidden</td>
           </tr>
         ))}
