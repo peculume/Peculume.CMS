@@ -13,6 +13,7 @@ export default defineConfig({
       hooks: path.resolve(__dirname, "src/hooks"),
       modals: path.resolve(__dirname, "src/modals"),
       pages: path.resolve(__dirname, "src/pages"),
+      providers: path.resolve(__dirname, "src/providers"),
       types: path.resolve(__dirname, "src/types"),
     },
   },
