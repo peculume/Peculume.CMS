@@ -1,12 +1,33 @@
 import { FormEvent, useState } from "react";
 import styles from "./UserAdminLogin.module.scss";
+import { useAuthLogin } from "hooks/AuthHooks/AuthHooks";
+import { useAuth } from "providers/AuthProvider";
+import { AuthResponse } from "types/productTypes";
+import { useNavigate } from "react-router";
 
 const UserAdminLogin = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const { setToken } = useAuth();
+
+  const { login } = useAuthLogin({
+    onSuccess: (data: AuthResponse) => {
+      setToken(data.token);
+      navigate('/');
+    },
+    onError: (error) => {
+      setError(error.message);
+    }
+  });
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    login({ email, password });
   }
 
   return (
@@ -20,6 +41,9 @@ const UserAdminLogin = () => {
         <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       <input className={styles.submitButton} type="submit" value="Login" />
+      {error && (
+        <p className="error">{error}</p>
+      )}
     </form>
   );
 };
