@@ -12,11 +12,11 @@ const UserAdminLogin = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const { setToken } = useAuth();
+  const { setJwt } = useAuth();
 
-  const { login } = useAuthLogin({
+  const { login, loginIsPending } = useAuthLogin({
     onSuccess: (data: AuthResponse) => {
-      setToken(data.token);
+      setJwt(data.token);
       navigate('/');
     },
     onError: (error) => {
@@ -40,7 +40,7 @@ const UserAdminLogin = () => {
         <label htmlFor="password">Passowrd</label>
         <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <input className={styles.submitButton} type="submit" value="Login" />
+      <input className={styles.submitButton} type="submit" value="Login" disabled={loginIsPending} />
       {error && (
         <p className="error">{error}</p>
       )}

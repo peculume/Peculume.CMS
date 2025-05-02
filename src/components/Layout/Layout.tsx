@@ -9,10 +9,10 @@ type LayoutProps = {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { authData, setToken } = useAuth();
+  const { authData, setJwt } = useAuth();
 
   const handleLogout = () => {
-    setToken(null)
+    setJwt(null)
     navigate("/login");
   }
 

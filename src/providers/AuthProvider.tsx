@@ -5,7 +5,7 @@ import { Navigate, useLocation } from "react-router";
 import { AuthResponse } from "types/productTypes";
 
 interface AuthContextType {
-  setToken: (token: string | null) => void;
+  setJwt: (token: string | null) => void;
   authData?: AuthResponse;
 }
 interface AuthContextProviderProps {
@@ -20,22 +20,16 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   const queryClient = useQueryClient();
 
   const [jwt, setJwt] = useState<string | null>(() => localStorage.getItem("jwt"));
-  const { authData, isAuthDataLoading } = useVerifyAdminUser({ jwt });
+  const { authData, isAuthDataLoading } = useVerifyAdminUser({ jwt, setJwt });
 
-  const setToken = (token: string | null) => {
-    setJwt(token);
-    if (token) {
-      localStorage.setItem("jwt", token);
+  useEffect(() => {
+    if (jwt) {
+      localStorage.setItem("jwt", jwt);
     }
     else {
       localStorage.removeItem("jwt");
     }
-  }
-
-  useEffect(() => {
-    if (!jwt) {
-      queryClient.removeQueries({ queryKey: ["verifyAdminUser"] });
-    }
+    queryClient.removeQueries({ queryKey: ["verifyAdminUser"] });
   }, [jwt])
 
   if (location.pathname !== "/login" && !authData && !isAuthDataLoading) {
@@ -49,7 +43,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   return (
     <AuthContext.Provider
       value={{
-        setToken,
+        setJwt,
         authData,
       }}
     >

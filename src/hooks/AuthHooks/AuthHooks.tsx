@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { API_BASE_URL } from "api/config";
 import { mutationProps } from "hooks";
+import { useEffect } from "react";
 import { ApiError, AuthResponse } from "types/productTypes";
 
-const useVerifyAdminUser = ({ jwt }: { jwt: string | null }) => {
+const useVerifyAdminUser = ({ jwt, setJwt }: { jwt: string | null; setJwt: (token: string | null) => void; }) => {
   const { data, isLoading, isError, } = useQuery({
     queryKey: ["verifyAdminUser"],
     queryFn: async () => {
@@ -25,6 +26,12 @@ const useVerifyAdminUser = ({ jwt }: { jwt: string | null }) => {
     enabled: !!jwt,
   })
 
+  useEffect(() => {
+    if (isError) {
+      setJwt(null);
+    }
+  }, [isError])
+
   return {
     authData: data,
     isAuthDataLoading: isLoading,
@@ -33,7 +40,7 @@ const useVerifyAdminUser = ({ jwt }: { jwt: string | null }) => {
 }
 
 export const useAuthLogin = ({ onSuccess, onError }: mutationProps<AuthResponse>) => {
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (props: { email: string, password: string }) => {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
@@ -62,6 +69,7 @@ export const useAuthLogin = ({ onSuccess, onError }: mutationProps<AuthResponse>
 
   return {
     login: mutate,
+    loginIsPending: isPending,
   }
 }
 
