@@ -1,14 +1,20 @@
 import { FC, ReactNode } from "react"
-import { Link } from "react-router";
-import styles from "./Layout.module.scss";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "providers/AuthProvider";
+import styles from "./Layout.module.scss";
 
 type LayoutProps = {
   children: ReactNode,
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
-  const { authData } = useAuth();
+  const navigate = useNavigate();
+  const { authData, setToken } = useAuth();
+
+  const handleLogout = () => {
+    setToken(null)
+    navigate("/login");
+  }
 
   return (
     <div className={styles.layoutContainer}>
@@ -16,6 +22,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         <Link to="/">
           <h1>Peculume CMS</h1>
         </Link>
+        {authData && (
+          <button onClick={handleLogout}>Logout</button>
+        )}
       </header>
       <div className={styles.layoutBodyContainer}>
         {(!!authData && authData.adminUser.verified) && (

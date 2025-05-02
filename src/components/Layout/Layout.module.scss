@@ -13,6 +13,8 @@ $color-shadow: rgba(0, 0, 0, 0.06);
 }
 
 .layoutHeaderContainer {
+  display: flex;
+  justify-content: space-between;
   background-color: $color-header-bg;
   padding: 5px 10px;
   color: $color-header-text;
