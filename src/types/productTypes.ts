@@ -4,7 +4,15 @@ export type Product = {
   slug: string;
   createdAt: string;
   lastModifiedAt: string;
+  images: Image[];
   tags: Tag[];
+};
+
+export type Image = {
+  imageId: number;
+  url: string;
+  name: string;
+  alt: string;
 };
 
 export type Tag = {

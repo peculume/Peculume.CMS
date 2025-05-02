@@ -1,11 +1,13 @@
-import { FC, FormEvent, useEffect, useState } from "react";
+import { FC, FormEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiError, Product, Tag } from "types/productTypes";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
+import { ApiError, Image, Product, Tag } from "types/productTypes";
+import { getImage, uploadImage } from "utils/supabaseUtils";
 import { useGetTags } from "hooks/TagHooks/TagHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 import styles from "./ProductForm.module.scss";
+import { useCreateImage } from "hooks/ImageHooks/ImageHooks";
 
 type ProductFormTypes = {
   product?: Product;
@@ -18,6 +20,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [name, setName] = useState(product?.name ?? '');
   const [slug, setSlug] = useState(product?.slug ?? '');
   const [description, setDescription] = useState('');
+  const [images, setImages] = useState<Image[]>(product?.images ?? []);
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
 
@@ -42,6 +45,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           name,
           slug,
           description,
+          imageIds: images.map(({ imageId }) => imageId),
           tagIds: tags.map(({ tagId }) => tagId),
         }),
       });
@@ -74,6 +78,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           name,
           slug,
           description,
+          imageIds: images.map(({ imageId }) => imageId),
           tagIds: tags.map(({ tagId }) => tagId),
         }),
       });
@@ -118,6 +123,42 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     }
   });
 
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const { createImage } = useCreateImage({
+    onSuccess: (image) => {
+      if (!images.find(({ name }) => name === image.name)) {
+        setImages((prev) => ([
+          ...prev,
+          image
+        ]));
+      }
+      setIsUploadingImage(false);
+    },
+    onError: () => {
+      setIsUploadingImage(false);
+    }
+  });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0] || null
+    if (selected !== null) {
+      const name = selected.name;
+      const { error: uploadError } = await uploadImage(selected, name);
+      if (uploadError) {
+        return;
+      }
+
+      const { data } = getImage(name);
+      setIsUploadingImage(true);
+      createImage({ url: data.publicUrl, name: name })
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  }
+
   const handleTagSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedTagId = e.target.value;
     const selectedTag = availableTags.find(tag => tag.tagId == selectedTagId);
@@ -155,6 +196,45 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       <div className="formGroup">
         <label htmlFor="description">Description</label>
         <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+      </div>
+      <div className="formGroup">
+        <label>Media</label>
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} disabled={isUploadingImage} />
+        {images.length == 0 ? (
+          <div className={styles.imageUploader} >
+            <div>
+              <input type="button" value="Upload new" onClick={() => fileInputRef.current?.click()} />
+              <input type="button" value="Select existing" />
+            </div>
+            <p className={styles.mediaDescriptionText}>Accepts images and 3D models</p>
+          </div>
+        ) : (
+          <div className={styles.imagesGrid}>
+            {images.slice(0, 9).map(({ imageId, url }, index) => (
+              <div
+                key={imageId}
+                className={index === 0 ? styles.largeImage : styles.smallImage}
+              >
+                <img src={url} />
+              </div>
+            ))}
+
+            {images.length < 9 && !isUploadingImage && (
+              <div
+                className={`${styles.smallImage} ${styles.addImage}`}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                +
+              </div>
+            )}
+            {images.length < 9 && isUploadingImage && (
+              <div
+              >
+                Uploading...
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div className="formGroup">
         <label htmlFor="tags">Tags</label>
