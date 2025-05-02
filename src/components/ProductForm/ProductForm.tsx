@@ -1,22 +1,17 @@
 import { FC, FormEvent, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { ApiError, Image, Product, Tag } from "types/productTypes";
 import { getImage, uploadImage } from "utils/supabaseUtils";
+import { useCreateImage } from "hooks/ImageHooks/ImageHooks";
+import { useCreateProduct, useDeleteProduct, useUpdateProduct } from "hooks/ProductHooks/ProductHooks";
 import { useGetTags } from "hooks/TagHooks/TagHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 import styles from "./ProductForm.module.scss";
-import { useCreateImage } from "hooks/ImageHooks/ImageHooks";
 
 type ProductFormTypes = {
   product?: Product;
 }
 
 const ProductForm: FC<ProductFormTypes> = ({ product }) => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
   const [name, setName] = useState(product?.name ?? '');
   const [slug, setSlug] = useState(product?.slug ?? '');
   const [description, setDescription] = useState('');
@@ -33,95 +28,23 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     setAvailableTags(filtered);
   }, [dataTags])
 
-  const { mutate: updateProduct } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/products/${product?.productId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
-        },
-        body: JSON.stringify({
-          name,
-          slug,
-          description,
-          imageIds: images.map(({ imageId }) => imageId),
-          tagIds: tags.map(({ tagId }) => tagId),
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json() as ApiError;
-        throw error;
-      }
-
-      return await response.json() as Product;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getProducts"] })
-      queryClient.invalidateQueries({ queryKey: ["getProduct", product?.productId.toString()] })
-    },
+  const { createProduct } = useCreateProduct({
     onError: (error: ApiError) => {
       setErrorMessage(error.message);
     }
   });
 
-  const { mutate: createProduct } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/products/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
-        },
-        body: JSON.stringify({
-          name,
-          slug,
-          description,
-          imageIds: images.map(({ imageId }) => imageId),
-          tagIds: tags.map(({ tagId }) => tagId),
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json() as ApiError;
-        throw error;
-      }
-
-      return await response.json() as Product;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getProducts"] })
-      navigate("/products");
-    },
+  const { updateProduct } = useUpdateProduct({
     onError: (error: ApiError) => {
       setErrorMessage(error.message);
     }
   });
 
-  const { mutate: deleteProduct } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/products/${product?.productId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json() as ApiError;
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getProducts"] })
-      navigate("/products");
-    },
+  const { deleteProduct } = useDeleteProduct({
     onError: (error: ApiError) => {
       setErrorMessage(error.message);
     }
-  });
+  })
 
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const { createImage } = useCreateImage({
@@ -177,9 +100,22 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (product) {
-      updateProduct();
+      updateProduct({
+        productId: product.productId,
+        name,
+        slug,
+        description,
+        images,
+        tags
+      });
     } else {
-      createProduct();
+      createProduct({
+        name,
+        slug,
+        description,
+        images,
+        tags,
+      });
     }
   }
 
@@ -269,7 +205,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       <div>
         <div className={styles.buttonsContainer}>
           {product && (
-            <button className="danger" onClick={() => deleteProduct()}>Delete</button>
+            <button className="danger" onClick={() => deleteProduct({ productId: product.productId })}>Delete</button>
           )}
           <input className={styles.submitButton} type="submit" value="Save" />
         </div>

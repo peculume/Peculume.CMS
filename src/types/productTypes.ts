@@ -1,5 +1,5 @@
 export type Product = {
-  productId: string | number;
+  productId: number;
   name: string;
   slug: string;
   createdAt: string;
