@@ -1,11 +1,20 @@
 import { useNavigate } from "react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { mutationProps } from "hooks";
 import { useAuth } from "providers/AuthProvider";
 import { ApiError, Media, Product, Tag } from "types/productTypes";
 
 type CreateProductProps = {
+  name: string;
+  slug: string;
+  description: string;
+  media: Media[];
+  tags: Tag[];
+};
+
+type UpdateProductProps = {
+  productId: number;
   name: string;
   slug: string;
   description: string;
@@ -68,15 +77,6 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
   return {
     createProduct: mutate,
   };
-};
-
-type UpdateProductProps = {
-  productId: number;
-  name: string;
-  slug: string;
-  description: string;
-  media: Media[];
-  tags: Tag[];
 };
 
 const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
@@ -180,4 +180,28 @@ const useDeleteProduct = ({ onSuccess, onError }: mutationProps<undefined>) => {
   };
 };
 
-export { useCreateProduct, useUpdateProduct, useDeleteProduct };
+const useGetProducts = () => {
+  const { data = [] } = useQuery({
+    queryKey: ["getProducts"],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/products/`, {
+        method: "GET",
+        headers: {
+          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+        },
+      });
+      if (!response.ok) {
+        throw `Error fetching products: ${response.status}`;
+      }
+      const resp = (await response.json()) as Product[];
+      return resp;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    products: data,
+  };
+};
+
+export { useCreateProduct, useUpdateProduct, useDeleteProduct, useGetProducts };
