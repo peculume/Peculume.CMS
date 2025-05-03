@@ -37,7 +37,7 @@ const UserAdminLogin = () => {
         <input id="name" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </div>
       <div className="formGroup">
-        <label htmlFor="password">Passowrd</label>
+        <label htmlFor="password">Password</label>
         <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       <input className={styles.submitButton} type="submit" value="Login" disabled={loginIsPending} />

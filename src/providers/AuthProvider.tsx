@@ -14,7 +14,6 @@ interface AuthContextProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
   const location = useLocation();
   const queryClient = useQueryClient();

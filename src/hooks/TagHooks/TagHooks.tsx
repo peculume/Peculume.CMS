@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
+import { useAuth } from "providers/AuthProvider";
 import { ApiError, Tag } from "types/productTypes";
 
 export const useGetTags = () => {
@@ -36,14 +37,22 @@ type useCreateTagProps = {
 
 export const useCreateTag = ({ onSuccess, onError }: useCreateTagProps) => {
   const queryClient = useQueryClient();
+  const { authData } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: async (tagName: string) => {
+      if (!authData) {
+        throw {
+          message: "Not authenticated",
+        };
+      }
       const response = await fetch(`${API_BASE_URL}/tags/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
+          Authorization: `bearer ${authData.token}`,
+          adminUserId: authData.adminUser.adminUserId.toString(),
         },
         body: JSON.stringify({
           tagName,

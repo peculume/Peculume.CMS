@@ -13,6 +13,8 @@ const CreateTagModal = () => {
   const { createTag } = useCreateTag({
     onSuccess: () => {
       setTag("");
+      setError("");
+      setOpen(false);
     },
     onError: (error) => {
       setError(error.message);
@@ -53,9 +55,7 @@ const CreateTagModal = () => {
           <div
             style={{ display: "flex", marginTop: 25, justifyContent: "flex-end" }}
           >
-            <Dialog.Close asChild>
-              <button disabled={isInvalid || isDuplicate} onClick={handleSubmit}>Create</button>
-            </Dialog.Close>
+            <button disabled={isInvalid || isDuplicate} onClick={handleSubmit}>Create</button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
