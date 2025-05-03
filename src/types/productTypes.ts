@@ -4,12 +4,12 @@ export type Product = {
   slug: string;
   createdAt: string;
   lastModifiedAt: string;
-  images: Image[];
+  media: Media[];
   tags: Tag[];
 };
 
-export type Image = {
-  imageId: number;
+export type Media = {
+  mediaId: number;
   url: string;
   name: string;
   alt: string;

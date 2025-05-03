@@ -3,13 +3,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { mutationProps } from "hooks";
 import { useAuth } from "providers/AuthProvider";
-import { ApiError, Image, Product, Tag } from "types/productTypes";
+import { ApiError, Media, Product, Tag } from "types/productTypes";
 
 type CreateProductProps = {
   name: string;
   slug: string;
   description: string;
-  images: Image[];
+  media: Media[];
   tags: Tag[];
 };
 
@@ -23,7 +23,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       name,
       slug,
       description,
-      images,
+      media,
       tags,
     }: CreateProductProps) => {
       if (!authData) {
@@ -43,7 +43,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           name,
           slug,
           description,
-          imageIds: images.map(({ imageId }) => imageId),
+          mediaIds: media.map(({ mediaId }) => mediaId),
           tagIds: tags.map(({ tagId }) => tagId),
         }),
       });
@@ -75,7 +75,7 @@ type UpdateProductProps = {
   name: string;
   slug: string;
   description: string;
-  images: Image[];
+  media: Media[];
   tags: Tag[];
 };
 
@@ -89,7 +89,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       name,
       slug,
       description,
-      images,
+      media,
       tags,
     }: UpdateProductProps) => {
       if (!authData) {
@@ -110,7 +110,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           name,
           slug,
           description,
-          imageIds: images.map(({ imageId }) => imageId),
+          mediaIds: media.map(({ mediaId }) => mediaId),
           tagIds: tags.map(({ tagId }) => tagId),
         }),
       });

@@ -1,9 +1,9 @@
 import { FC, FormEvent, useEffect, useRef, useState } from "react";
-import { ApiError, Image, Product, Tag } from "types/productTypes";
+import { ApiError, Media, Product, Tag } from "types/productTypes";
 import { getImage, uploadImage } from "utils/supabaseUtils";
-import { useCreateImage } from "hooks/ImageHooks/ImageHooks";
 import { useCreateProduct, useDeleteProduct, useUpdateProduct } from "hooks/ProductHooks/ProductHooks";
 import { useGetTags } from "hooks/TagHooks/TagHooks";
+import { useCreateImage } from "hooks/MediaHooks/MediaHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 import styles from "./ProductForm.module.scss";
 
@@ -15,7 +15,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [name, setName] = useState(product?.name ?? '');
   const [slug, setSlug] = useState(product?.slug ?? '');
   const [description, setDescription] = useState('');
-  const [images, setImages] = useState<Image[]>(product?.images ?? []);
+  const [media, setMedia] = useState<Media[]>(product?.media ?? []);
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
 
@@ -49,8 +49,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const { createImage } = useCreateImage({
     onSuccess: (image) => {
-      if (!images.find(({ name }) => name === image.name)) {
-        setImages((prev) => ([
+      if (!media.find(({ name }) => name === image.name)) {
+        setMedia((prev) => ([
           ...prev,
           image
         ]));
@@ -74,7 +74,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
       const { data } = getImage(name);
       setIsUploadingImage(true);
-      createImage({ url: data.publicUrl, name: name })
+      createImage({ url: data.publicUrl, name: name, type: "Image" });
 
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -105,7 +105,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         name,
         slug,
         description,
-        images,
+        media,
         tags
       });
     } else {
@@ -113,7 +113,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         name,
         slug,
         description,
-        images,
+        media,
         tags,
       });
     }
@@ -136,7 +136,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       <div className="formGroup">
         <label>Media</label>
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} disabled={isUploadingImage} />
-        {images.length == 0 ? (
+        {media.length == 0 ? (
           <div className={styles.imageUploader} >
             <div>
               <input type="button" value="Upload new" onClick={() => fileInputRef.current?.click()} />
@@ -146,16 +146,16 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           </div>
         ) : (
           <div className={styles.imagesGrid}>
-            {images.slice(0, 9).map(({ imageId, url }, index) => (
+            {media.slice(0, 9).map(({ mediaId, url }, index) => (
               <div
-                key={imageId}
+                key={mediaId}
                 className={index === 0 ? styles.largeImage : styles.smallImage}
               >
                 <img src={url} />
               </div>
             ))}
 
-            {images.length < 9 && !isUploadingImage && (
+            {media.length < 9 && !isUploadingImage && (
               <div
                 className={`${styles.smallImage} ${styles.addImage}`}
                 onClick={() => fileInputRef.current?.click()}
@@ -163,7 +163,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
                 +
               </div>
             )}
-            {images.length < 9 && isUploadingImage && (
+            {media.length < 9 && isUploadingImage && (
               <div
               >
                 Uploading...
