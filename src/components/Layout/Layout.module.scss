@@ -23,12 +23,20 @@ $color-shadow: rgba(0, 0, 0, 0.06);
     margin: 0;
     font-size: 1.5rem;
   }
+
+  @media (max-width: 370px) {
+    flex-direction: column;
+  }
 }
 
 .layoutBodyContainer {
   display: flex;
   flex: 1;
   flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .layoutSidebarContainer {
