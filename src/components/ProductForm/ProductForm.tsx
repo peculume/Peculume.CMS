@@ -18,6 +18,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [media, setMedia] = useState<Media[]>(product?.media ?? []);
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [price, setPrice] = useState<number | string>(product?.price ?? 9.99);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -200,6 +201,10 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
             </select>
           )}
           <CreateTagModal />
+        </div>
+        <div className="formGroup">
+          <label htmlFor="price">Price</label>
+          <input id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
         </div>
       </div>
       <div>
