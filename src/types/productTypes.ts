@@ -6,7 +6,7 @@ export type Product = {
   lastModifiedAt: string;
   media: Media[];
   tags: Tag[];
-  price: number;
+  price: string;
 };
 
 export type Media = {

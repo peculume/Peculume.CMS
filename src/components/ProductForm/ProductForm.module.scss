@@ -173,6 +173,17 @@
   }
 }
 
+.priceInputContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+
+  input { 
+    flex: 1;
+  }
+}
+
 .buttonsContainer {
   display: flex;
   flex-direction: row;
