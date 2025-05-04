@@ -11,15 +11,11 @@ type CreateProductProps = {
   description: string;
   media: Media[];
   tags: Tag[];
+  price: number;
 };
 
-type UpdateProductProps = {
+type UpdateProductProps = CreateProductProps & {
   productId: number;
-  name: string;
-  slug: string;
-  description: string;
-  media: Media[];
-  tags: Tag[];
 };
 
 const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
@@ -27,13 +23,14 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
   const queryClient = useQueryClient();
   const { authData } = useAuth();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async ({
       name,
       slug,
       description,
       media,
       tags,
+      price,
     }: CreateProductProps) => {
       if (!authData) {
         throw {
@@ -54,6 +51,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           description,
           mediaIds: media.map(({ mediaId }) => mediaId),
           tagIds: tags.map(({ tagId }) => tagId),
+          price,
         }),
       });
 
@@ -76,6 +74,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
 
   return {
     createProduct: mutate,
+    createProductPending: isPending,
   };
 };
 
@@ -83,7 +82,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
   const queryClient = useQueryClient();
   const { authData } = useAuth();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async ({
       productId,
       name,
@@ -91,6 +90,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       description,
       media,
       tags,
+      price,
     }: UpdateProductProps) => {
       if (!authData) {
         throw {
@@ -112,6 +112,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           description,
           mediaIds: media.map(({ mediaId }) => mediaId),
           tagIds: tags.map(({ tagId }) => tagId),
+          price,
         }),
       });
 
@@ -137,6 +138,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
 
   return {
     updateProduct: mutate,
+    updateProductPending: isPending,
   };
 };
 

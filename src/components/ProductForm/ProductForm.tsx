@@ -18,7 +18,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [media, setMedia] = useState<Media[]>(product?.media ?? []);
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
-  const [price, setPrice] = useState<string>(product?.price ?? "9.99");
+  const [price, setPrice] = useState<number>(product?.price ?? 9.99);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,13 +29,19 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     setAvailableTags(filtered);
   }, [dataTags])
 
-  const { createProduct } = useCreateProduct({
+  const { createProduct, createProductPending } = useCreateProduct({
+    onSuccess: (product) => {
+      setErrorMessage("");
+    },
     onError: (error: ApiError) => {
       setErrorMessage(error.message);
     }
   });
 
-  const { updateProduct } = useUpdateProduct({
+  const { updateProduct, updateProductPending } = useUpdateProduct({
+    onSuccess: (product) => {
+      setErrorMessage("");
+    },
     onError: (error: ApiError) => {
       setErrorMessage(error.message);
     }
@@ -107,7 +113,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         slug,
         description,
         media,
-        tags
+        tags,
+        price
       });
     } else {
       createProduct({
@@ -116,6 +123,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         description,
         media,
         tags,
+        price,
       });
     }
   }
@@ -207,7 +215,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         <label htmlFor="price">Price</label>
         <div className={styles.priceInputContainer}>
           <p>£</p>
-          <input id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+          <input id="price" type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
         </div>
       </div>
       <div>
@@ -215,7 +223,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           {product && (
             <button className="danger" onClick={() => deleteProduct({ productId: product.productId })}>Delete</button>
           )}
-          <input className={styles.submitButton} type="submit" value="Save" />
+          <input className={styles.submitButton} type="submit" value="Save" disabled={createProductPending || updateProductPending} />
         </div>
         {errorMessage && (
           <p className="error">{errorMessage}</p>
