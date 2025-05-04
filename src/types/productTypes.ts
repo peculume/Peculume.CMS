@@ -4,9 +4,15 @@ export type Product = {
   slug: string;
   createdAt: string;
   lastModifiedAt: string;
+  productType: ProductType;
   media: Media[];
   tags: Tag[];
   price: number;
+};
+
+export type ProductType = {
+  productTypeId: number;
+  name: string;
 };
 
 export type Media = {

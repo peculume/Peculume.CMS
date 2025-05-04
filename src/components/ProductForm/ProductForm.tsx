@@ -1,11 +1,12 @@
 import { FC, FormEvent, useEffect, useRef, useState } from "react";
-import { ApiError, Media, Product, Tag } from "types/productTypes";
+import { ApiError, Media, Product, ProductType, Tag } from "types/productTypes";
 import { getImage, uploadImage } from "utils/supabaseUtils";
 import { useCreateProduct, useDeleteProduct, useUpdateProduct } from "hooks/ProductHooks/ProductHooks";
 import { useGetTags } from "hooks/TagHooks/TagHooks";
 import { useCreateImage } from "hooks/MediaHooks/MediaHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 import styles from "./ProductForm.module.scss";
+import { useGetProductTypes } from "hooks/ProductTypeHooks/ProductTypeHooks";
 
 type ProductFormTypes = {
   product?: Product;
@@ -16,6 +17,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [slug, setSlug] = useState(product?.slug ?? '');
   const [description, setDescription] = useState('');
   const [media, setMedia] = useState<Media[]>(product?.media ?? []);
+  const [productType, setProductType] = useState<ProductType | null>(product?.productType ?? null);
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [price, setPrice] = useState<number>(product?.price ?? 9.99);
@@ -23,6 +25,8 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { tags: dataTags } = useGetTags();
+
+  const { productTypes, isProductTypesLoading } = useGetProductTypes();
 
   useEffect(() => {
     const filtered = dataTags.filter(tag => !tags.some(t => t.tagId === tag.tagId));
@@ -106,6 +110,12 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!productType) {
+      setErrorMessage("Please select a product type");
+      return;
+    }
+
     if (product) {
       updateProduct({
         productId: product.productId,
@@ -113,6 +123,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         slug,
         description,
         media,
+        productType,
         tags,
         price
       });
@@ -122,6 +133,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         slug,
         description,
         media,
+        productType,
         tags,
         price,
       });
@@ -179,6 +191,22 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
               </div>
             )}
           </div>
+        )}
+      </div>
+      <div className="formGroup">
+        <label htmlFor="productType">Product Type</label>
+        {!isProductTypesLoading && (
+          <select id="productType"
+            onChange={(e) => setProductType(productTypes.find(({ productTypeId }) => productTypeId == Number(e.target.value)) ?? null)}
+            defaultValue={product?.productType?.productTypeId ?? ""}
+          >
+            <option value="">Select a product type...</option>
+            {productTypes.map(({ productTypeId, name }) => (
+              <option key={productTypeId} value={productTypeId}>
+                {name}
+              </option>
+            ))}
+          </select>
         )}
       </div>
       <div className="formGroup">

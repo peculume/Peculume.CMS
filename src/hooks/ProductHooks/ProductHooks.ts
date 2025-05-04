@@ -3,13 +3,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { mutationProps } from "hooks";
 import { useAuth } from "providers/AuthProvider";
-import { ApiError, Media, Product, Tag } from "types/productTypes";
+import { ApiError, Media, Product, ProductType, Tag } from "types/productTypes";
 
 type CreateProductProps = {
   name: string;
   slug: string;
   description: string;
   media: Media[];
+  productType: ProductType;
   tags: Tag[];
   price: number;
 };
@@ -29,6 +30,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       slug,
       description,
       media,
+      productType,
       tags,
       price,
     }: CreateProductProps) => {
@@ -50,6 +52,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           slug,
           description,
           mediaIds: media.map(({ mediaId }) => mediaId),
+          productTypeId: productType.productTypeId,
           tagIds: tags.map(({ tagId }) => tagId),
           price,
         }),
@@ -89,6 +92,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       slug,
       description,
       media,
+      productType,
       tags,
       price,
     }: UpdateProductProps) => {
@@ -111,6 +115,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           slug,
           description,
           mediaIds: media.map(({ mediaId }) => mediaId),
+          productTypeId: productType.productTypeId,
           tagIds: tags.map(({ tagId }) => tagId),
           price,
         }),
