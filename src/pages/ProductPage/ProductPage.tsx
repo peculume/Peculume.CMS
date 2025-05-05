@@ -2,8 +2,8 @@ import { useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { Product } from "types/productTypes";
-import styles from "./ProductPage.module.scss";
 import ProductForm from "components/ProductForm/ProductForm";
+import styles from "./ProductPage.module.scss";
 
 const ProductPage = () => {
   const { productId } = useParams();

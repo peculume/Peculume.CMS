@@ -76,4 +76,29 @@ const useGetMedia = () => {
   };
 };
 
-export { useCreateImage, useGetMedia };
+const useGetMediaById = (mediaId: string | undefined) => {
+  const { data } = useQuery({
+    queryKey: ["getMedia", mediaId],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/media/${mediaId}`, {
+        method: "GET",
+        headers: {
+          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+        },
+      });
+      if (!response.ok) {
+        throw `Error fetching media: ${response.status}`;
+      }
+      const resp = (await response.json()) as Media;
+      return resp;
+    },
+    enabled: !!mediaId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    media: data,
+  };
+};
+
+export { useCreateImage, useGetMedia, useGetMediaById };
