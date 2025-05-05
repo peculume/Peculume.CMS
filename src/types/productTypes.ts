@@ -13,6 +13,7 @@ export type Product = {
 export type ProductType = {
   productTypeId: number;
   name: string;
+  slug: string;
 };
 
 export type Media = {
@@ -20,6 +21,7 @@ export type Media = {
   url: string;
   name: string;
   alt: string;
+  type: "Image" | "Model";
 };
 
 export type Tag = {

@@ -30,6 +30,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         {(!!authData && authData.adminUser.verified) && (
           <div className={styles.layoutSidebarContainer}>
             <Link to={"/products"}>Products</Link>
+            <Link to={"/media"}>Media</Link>
           </div>
         )}
         <div className={styles.layoutPageContainer}>

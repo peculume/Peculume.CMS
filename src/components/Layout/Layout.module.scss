@@ -40,6 +40,8 @@ $color-shadow: rgba(0, 0, 0, 0.06);
 }
 
 .layoutSidebarContainer {
+  display: flex;
+  flex-direction: column;
   padding: 2rem;
   background-color: $color-sidebar;
   min-width: 200px;

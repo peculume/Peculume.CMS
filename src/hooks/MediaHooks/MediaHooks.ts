@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
 import { ApiError, Media } from "types/productTypes";
 import { mutationProps } from "hooks";
@@ -51,4 +51,29 @@ const useCreateImage = ({ onSuccess, onError }: mutationProps<Media>) => {
   };
 };
 
-export { useCreateImage };
+const useGetMedia = () => {
+  const { data = [] } = useQuery({
+    queryKey: ["getMedia"],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/media/`, {
+        method: "GET",
+        headers: {
+          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+        },
+      });
+      if (!response.ok) {
+        throw `Error fetching media: ${response.status}`;
+      }
+      const resp = (await response.json()) as Media[];
+
+      return resp;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    media: data,
+  };
+};
+
+export { useCreateImage, useGetMedia };

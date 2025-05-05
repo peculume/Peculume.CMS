@@ -5,6 +5,7 @@ import HomePage from "pages/HomePage/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import ProductPage from "pages/ProductPage/ProductPage";
 import ProductsPage from "pages/ProductsPage/ProductsPage";
+import MediaPage from "pages/MediaPage/MediaPage";
 import Layout from "components/Layout/Layout";
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products/:productId" element={<ProductPage />} />
             <Route path="/products/create" element={<CreateProductPage />} />
+            <Route path="/media" element={<MediaPage />} />
           </Routes>
         </Layout>
       </AuthContextProvider>
