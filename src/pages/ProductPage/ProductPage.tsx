@@ -12,7 +12,7 @@ const ProductPage = () => {
   const { data: product } = useQuery({
     queryKey: ["getProduct", productId],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+      const response = await fetch(`${API_BASE_URL}/products/id/${productId}`, {
         method: 'GET',
         headers: {
           "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,

@@ -187,11 +187,16 @@ const useDeleteProduct = ({ onSuccess, onError }: mutationProps<undefined>) => {
   };
 };
 
-const useGetProducts = () => {
+const useGetProducts = (type?: string) => {
   const { data = [] } = useQuery({
     queryKey: ["getProducts"],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/products/`, {
+      const url = new URL(`${API_BASE_URL}/products/`);
+      if (type) {
+        url.searchParams.set("type", type);
+      }
+
+      const response = await fetch(url.toString(), {
         method: "GET",
         headers: {
           "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
