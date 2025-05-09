@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router";
 import { useGetMediaById } from "hooks/MediaHooks/MediaHooks";
+import { Image } from "components";
 import styles from "./MediaItemPage.module.scss";
-import Image from "components/Image/Image";
 
 const MediaItemPage = () => {
   const { mediaId } = useParams();

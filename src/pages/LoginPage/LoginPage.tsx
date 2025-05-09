@@ -1,5 +1,4 @@
-import UserAdminLogin from "components/UserAdminLogin/UserAdminLogin";
-
+import { UserAdminLogin } from "components";
 
 const LoginPage = () => {
 

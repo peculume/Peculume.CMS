@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import ProductForm from "components/ProductForm/ProductForm";
+import { ProductForm } from "components";
 import styles from "./CreateProductPage.module.scss";
 
 const CreateProductPage = () => {

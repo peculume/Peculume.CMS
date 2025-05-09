@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import ProductTable from "components/ProductTable/ProductTable";
+import { ProductTable } from "components";
 import styles from "./ProductsPage.module.scss";
 
 const ProductsPage = () => {

@@ -5,9 +5,9 @@ import { useCreateProduct, useDeleteProduct, useUpdateProduct } from "hooks/Prod
 import { useGetTags } from "hooks/TagHooks/TagHooks";
 import { useCreateImage } from "hooks/MediaHooks/MediaHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
-import styles from "./ProductForm.module.scss";
 import { useGetProductTypes } from "hooks/ProductTypeHooks/ProductTypeHooks";
-import Image from "components/Image/Image";
+import { Image } from "components";
+import styles from "./ProductForm.module.scss";
 
 type ProductFormTypes = {
   product?: Product;
@@ -78,14 +78,15 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] || null
     if (selected !== null) {
+      setIsUploadingImage(true);
       const name = selected.name;
       const { error: uploadError } = await uploadImage(selected, name);
       if (uploadError) {
+        setIsUploadingImage(false);
         return;
       }
 
       const { data } = getImage(name);
-      setIsUploadingImage(true);
       createImage({ url: data.publicUrl, name: name, type: "Image" });
 
       if (fileInputRef.current) {

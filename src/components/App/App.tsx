@@ -1,13 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import { AuthContextProvider } from "providers/AuthProvider";
-import CreateProductPage from "pages/CreateProductPage/CreateProductPage";
-import HomePage from "pages/HomePage/HomePage";
-import LoginPage from "pages/LoginPage/LoginPage";
-import ProductPage from "pages/ProductPage/ProductPage";
-import ProductsPage from "pages/ProductsPage/ProductsPage";
-import MediaPage from "pages/MediaPage/MediaPage";
-import MediaItemPage from "pages/MediaItemPage/MediaItemPage";
-import Layout from "components/Layout/Layout";
+import {
+  CreateProductPage,
+  HomePage,
+  LoginPage,
+  MediaItemPage,
+  MediaPage,
+  ProductPage,
+  ProductsPage
+} from "pages";
+import { Layout } from "components";
 
 const App = () => {
   return (

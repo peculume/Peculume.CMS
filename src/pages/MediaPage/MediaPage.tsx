@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
+import { MediaTable } from "components";
 import styles from "./MediaPage.module.scss";
-import MediaTable from "components/MediaTable/MediaTable";
 
 const MediaPage = () => {
   const navigate = useNavigate();
