@@ -7,6 +7,7 @@ import { useCreateImage } from "hooks/MediaHooks/MediaHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 import styles from "./ProductForm.module.scss";
 import { useGetProductTypes } from "hooks/ProductTypeHooks/ProductTypeHooks";
+import Image from "components/Image/Image";
 
 type ProductFormTypes = {
   product?: Product;
@@ -167,12 +168,14 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           </div>
         ) : (
           <div className={styles.imagesGrid}>
-            {media.slice(0, 9).map(({ mediaId, url }, index) => (
+            {media.slice(0, 9).map(({ mediaId, url, name }, index) => (
               <div
                 key={mediaId}
                 className={index === 0 ? styles.largeImage : styles.smallImage}
               >
-                <img src={url} />
+                <Image
+                  url={url}
+                  alt={name} />
               </div>
             ))}
 

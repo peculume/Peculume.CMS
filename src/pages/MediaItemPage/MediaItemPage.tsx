@@ -1,13 +1,12 @@
 import { useNavigate, useParams } from "react-router";
 import { useGetMediaById } from "hooks/MediaHooks/MediaHooks";
-import { useState } from "react";
 import styles from "./MediaItemPage.module.scss";
+import Image from "components/Image/Image";
 
 const MediaItemPage = () => {
   const { mediaId } = useParams();
   const navigate = useNavigate();
   const { media } = useGetMediaById(mediaId);
-  const [isLoading, setIsLoading] = useState(true);
 
   if (!media) {
     return null;
@@ -20,13 +19,7 @@ const MediaItemPage = () => {
         <h2 className={styles.title}>{media.name}</h2>
       </div>
       <div className={styles.imageContainer}>
-        {isLoading && <div className={styles.spinner}>Loading...</div>}
-        <img
-          src={media.url}
-          alt={media.name}
-          className={`${styles.image} ${isLoading ? styles.hidden : ""}`}
-          onLoad={() => setIsLoading(false)}
-        />
+        <Image url={media.url} alt={media.name} />
       </div>
     </div>
   );
