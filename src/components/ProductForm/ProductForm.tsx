@@ -16,7 +16,7 @@ type ProductFormTypes = {
 const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [name, setName] = useState(product?.name ?? '');
   const [slug, setSlug] = useState(product?.slug ?? '');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(product?.description ?? '');
   const [media, setMedia] = useState<Media[]>(product?.media ?? []);
   const [productType, setProductType] = useState<ProductType | null>(product?.productType ?? null);
   const [tags, setTags] = useState(product?.tags ?? []);
@@ -105,6 +105,10 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     e.target.selectedIndex = 0;
   };
 
+  const handleRemoveImage = (mediaId: number) => {
+    setMedia(prev => prev.filter(media => media.mediaId !== mediaId));
+  };
+
   const handleRemoveTag = (tagToRemove: Tag) => {
     setTags(prev => prev.filter(tag => tag.tagId !== tagToRemove.tagId));
     setAvailableTags(prev => [...prev, tagToRemove]);
@@ -163,7 +167,7 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           <div className={styles.imageUploader} >
             <div>
               <input type="button" value="Upload new" onClick={() => fileInputRef.current?.click()} />
-              <input type="button" value="Select existing" />
+              <input type="button" value="Select existing" onClick={() => alert("todo")} />
             </div>
             <p className={styles.mediaDescriptionText}>Accepts images and 3D models</p>
           </div>
@@ -174,6 +178,12 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
                 key={mediaId}
                 className={index === 0 ? styles.largeImage : styles.smallImage}
               >
+                <button
+                  className={styles.removeButton}
+                  onClick={() => handleRemoveImage(mediaId)}
+                >
+                  ×
+                </button>
                 <Image
                   url={url}
                   alt={name} />

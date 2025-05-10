@@ -70,6 +70,7 @@
   .largeImage {
     width: 200px;
     height: 200px;
+    position: relative;
 
     img {
       width: 100%;
@@ -101,6 +102,28 @@
         transform: scale(1.05);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
+    }
+  }
+
+  .removeButton {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 2;
+    line-height: 20px;
+    text-align: center;
+    padding: 0;
+  
+    &:hover {
+      background: rgba(255, 0, 0, 0.8);
     }
   }
 
