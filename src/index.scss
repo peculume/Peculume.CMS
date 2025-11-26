@@ -91,6 +91,12 @@ a {
   font-weight: bold;
 }
 
+.form {
+  display: flex;  
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 
 .formGroup {
   display: flex;

@@ -44,18 +44,20 @@ const CreateTagModal = () => {
           <Dialog.Description className={styles.dialogDescription}>
             Create additional tags to assign to products
           </Dialog.Description>
-          <div className="formGroup">
-            <label className="Label" htmlFor="tag">
-              Tag
-            </label>
-            <input className="Input" id="tag" value={tag} onChange={(e) => setTag(e.target.value)} />
-            {isDuplicate && <p className="error">That tag already exists.</p>}
-            {error && <p className="error">{error}</p>}
-          </div>
-          <div
-            style={{ display: "flex", marginTop: 25, justifyContent: "flex-end" }}
-          >
-            <button disabled={isInvalid || isDuplicate} onClick={handleSubmit}>Create</button>
+          <div className="form">
+            <div className="formGroup">
+              <label className="Label" htmlFor="tag">
+                Tag
+              </label>
+              <input className="Input" id="tag" value={tag} onChange={(e) => setTag(e.target.value)} />
+              {isDuplicate && <p className="error">That tag already exists.</p>}
+              {error && <p className="error">{error}</p>}
+            </div>
+            <div
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <button disabled={isInvalid || isDuplicate} onClick={handleSubmit}>Create</button>
+            </div>
           </div>
         </Dialog.Content>
       </Dialog.Portal>

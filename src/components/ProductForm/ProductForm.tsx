@@ -8,6 +8,7 @@ import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
 import { useGetProductTypes } from "hooks/ProductTypeHooks/ProductTypeHooks";
 import { Image } from "components";
 import styles from "./ProductForm.module.scss";
+import CreateProductTypeModal from "modals/CreateProductTypeModal/CreateProductTypeModal";
 
 type ProductFormTypes = {
   product?: Product;
@@ -207,24 +208,38 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           </div>
         )}
       </div>
+      {!isProductTypesLoading && (
+        <div className="formGroup">
+          <label htmlFor="productType">Product Type</label>
+          <div className={styles.tagSelector}>
+            <select id="productType"
+              onChange={(e) => setProductType(productTypes.find(({ productTypeId }) => productTypeId == Number(e.target.value)) ?? null)}
+              defaultValue={product?.productType?.productTypeId ?? ""}
+            >
+              <option value="">Select a product type...</option>
+              {productTypes.map(({ productTypeId, name }) => (
+                <option key={productTypeId} value={productTypeId}>
+                  {name}
+                </option>
+              ))}
+            </select>
+            <CreateProductTypeModal />
+          </div>
+        </div>
+      )}
       <div className="formGroup">
-        <label htmlFor="productType">Product Type</label>
-        {!isProductTypesLoading && (
-          <select id="productType"
-            onChange={(e) => setProductType(productTypes.find(({ productTypeId }) => productTypeId == Number(e.target.value)) ?? null)}
-            defaultValue={product?.productType?.productTypeId ?? ""}
-          >
-            <option value="">Select a product type...</option>
-            {productTypes.map(({ productTypeId, name }) => (
-              <option key={productTypeId} value={productTypeId}>
-                {name}
+        <label htmlFor="tags">Tags</label>
+        <div className={styles.tagSelector}>
+          <select id="tags" onChange={handleTagSelect}>
+            <option value="">Select a tag...</option>
+            {availableTags.map((tag) => (
+              <option key={tag.tagId} value={tag.tagId}>
+                {tag.name}
               </option>
             ))}
           </select>
-        )}
-      </div>
-      <div className="formGroup">
-        <label htmlFor="tags">Tags</label>
+          <CreateTagModal />
+        </div>
         <div className={styles.selectedTags}>
           {tags.map((tag) => (
             <div key={tag.tagId} className={styles.tagItem}>
@@ -238,19 +253,6 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
               </button>
             </div>
           ))}
-        </div>
-        <div className={styles.tagSelector}>
-          {availableTags.length > 0 && (
-            <select id="tags" onChange={handleTagSelect}>
-              <option value="">Select a tag...</option>
-              {availableTags.map((tag) => (
-                <option key={tag.tagId} value={tag.tagId}>
-                  {tag.name}
-                </option>
-              ))}
-            </select>
-          )}
-          <CreateTagModal />
         </div>
       </div>
       <div className="formGroup">
