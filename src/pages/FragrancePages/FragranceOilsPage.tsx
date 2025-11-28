@@ -1,25 +1,25 @@
 import { useNavigate } from 'react-router';
-import { MediaTable } from 'components';
+import FragranceOilsTable from './Components/FragranceOilsTable';
 
-const MediaPage = () => {
+const FragranceOilsPage = () => {
   const navigate = useNavigate();
 
   return (
     <div>
       <div className="actions-container">
-        <h2>Media</h2>
+        <h2>Fragrance oils</h2>
         <div>
           <button
             className="btn-primary"
-            onClick={() => navigate('/media/create')}
+            onClick={() => navigate('/fragrance-oils/create')}
           >
-            Add media
+            Add fragrance oil
           </button>
         </div>
       </div>
-      <MediaTable />
+      <FragranceOilsTable />
     </div>
   );
 };
 
-export default MediaPage;
+export default FragranceOilsPage;

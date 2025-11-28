@@ -42,9 +42,23 @@ $color-shadow: rgba(0, 0, 0, 0.06);
 .layoutSidebarContainer {
   display: flex;
   flex-direction: column;
+  gap: 15px;
   padding: 2rem;
   background-color: $color-sidebar;
   min-width: 200px;
+
+  .layoutSidebarSection {
+    display: flex;
+    flex-direction: column;
+
+    a {
+        padding-left: 5px;
+
+        &::before {
+            content: '- ';
+        }
+    }
+  }
 }
 
 .layoutPageContainer {

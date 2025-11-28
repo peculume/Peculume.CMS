@@ -6,7 +6,7 @@
   cursor: pointer;
 }
 
-input[type=submit],
+input[type='submit'],
 button {
   display: inline-block;
   padding: 0.375rem 0.75rem;
@@ -92,11 +92,10 @@ a {
 }
 
 .form {
-  display: flex;  
+  display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
-
 
 .formGroup {
   display: flex;
@@ -126,5 +125,140 @@ a {
   textarea {
     resize: vertical;
     min-height: 100px;
+  }
+
+  .selector {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    select {
+      flex: 1;
+    }
+  }
+
+  .selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .item {
+    position: relative;
+    background-color: #f0f0f0;
+    padding: 0.25rem 0.75rem;
+    padding-right: 1.5rem;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+  }
+
+  .remove-button {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+
+    &:hover {
+      background: #e60000;
+    }
+  }
+}
+
+.actions-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+
+  @media (max-width: 370px) {
+    flex-direction: column;
+  }
+}
+
+.container {
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+
+  .backButton {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .submitButton {
+    align-self: flex-start;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #111;
+    }
+  }
+}
+
+/* Modal */
+.dialogOverlay {
+  background-color: rgba($color: #333, $alpha: 0.8);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialogContent {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 500px;
+  max-height: 85vh;
+  padding: 25px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:focus {
+    outline: none;
   }
 }
