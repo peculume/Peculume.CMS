@@ -61,6 +61,7 @@ const useCreateFragranceOil = ({
     },
     onSuccess: (data) => {
       onSuccess?.(data);
+      queryClient.invalidateQueries({ queryKey: ['getFragranceOils'] });
     },
     onError: (error: ApiError) => {
       onError?.(error);

@@ -35,6 +35,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             <div className={styles.layoutSidebarSection}>
               <h2>Lab</h2>
               <Link to={'/fragrance-oils'}>Fragrance oils</Link>
+              <Link to={'/fragrance-mixes'}>Fragrance mixes</Link>
             </div>
           </div>
         )}

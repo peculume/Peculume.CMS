@@ -9,6 +9,7 @@ const FragranceOilsTable = () => {
       <thead>
         <tr>
           <th>Product</th>
+          <th>Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +22,7 @@ const FragranceOilsTable = () => {
             data-clickable
           >
             <td>{fragrance.name}</td>
+            <td>{fragrance.notes}</td>
           </tr>
         ))}
       </tbody>

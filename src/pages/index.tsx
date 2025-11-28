@@ -2,6 +2,9 @@ export { default as CreateProductPage } from './CreateProductPage/CreateProductP
 
 /* Fragrances */
 export { default as CreateFragranceOilPage } from './FragrancePages/CreateFragranceOilPage';
+export { default as CreateFragranceMixPage } from './FragrancePages/CreateFragranceMixPage';
+export { default as FragranceMixesPage } from './FragrancePages/FragranceMixesPage';
+export { default as FragranceMixPage } from './FragrancePages/FragranceMixPage';
 export { default as FragranceOilPage } from './FragrancePages/FragranceOilPage';
 export { default as FragranceOilsPage } from './FragrancePages/FragranceOilsPage';
 
