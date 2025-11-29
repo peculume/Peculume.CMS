@@ -14,3 +14,5 @@ export { default as MediaItemPage } from './MediaItemPage/MediaItemPage';
 export { default as MediaPage } from './MediaPage/MediaPage';
 export { default as ProductPage } from './ProductPage/ProductPage';
 export { default as ProductsPage } from './ProductsPage/ProductsPage';
+
+export { default as KanbanPage } from './kanban-page/KanbanPage';

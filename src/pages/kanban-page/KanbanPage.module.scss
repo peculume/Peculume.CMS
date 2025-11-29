@@ -1,0 +1,88 @@
+.kanbanContainer {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+
+  /* horizontal scroll */
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: flex-start;
+  scroll-behavior: smooth;
+
+  /* prevent columns from squishing too small */
+  & > * {
+    flex: 0 0 auto;
+  }
+
+  /* optional: nicer scrollbar in modern browsers */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #cbd5e1;
+  }
+}
+
+.kanbanColumn {
+  min-width: 280px;
+  max-width: 320px;
+  background: #f8faf9;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanbanColumnHeader {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.mixList {
+  padding: 0.75rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mixCard {
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(15, 23, 42, 0.16);
+    border-color: #cbd5e1;
+  }
+
+  p {
+    margin: 0 0 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -22,13 +22,13 @@ const FragranceMixesCard = ({
 
       <p className={styles.oilsHeader}>Versions:</p>
       <div>
-        {fragranceMix.versions.map(version => (
-          <div>
+        {fragranceMix.versions.map((version) => (
+          <div id={version.version}>
             <p>
               <b>V</b>
               {version.version}
             </p>
-            {version.fragranceOils.map(oil => (
+            {version.fragranceOils.map((oil) => (
               <div key={oil.fragranceOilId} className={styles.oilLine}>
                 <span className={styles.oilName}>{oil.name}</span>
                 {' — '}

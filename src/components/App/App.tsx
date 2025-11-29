@@ -9,6 +9,7 @@ import {
   FragranceOilPage,
   FragranceOilsPage,
   HomePage,
+  KanbanPage,
   LoginPage,
   MediaItemPage,
   MediaPage,
@@ -25,6 +26,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/kanban" element={<KanbanPage />} />
             <Route path="/fragrance-mixes" element={<FragranceMixesPage />} />
             <Route
               path="/fragrance-mixes/:fragranceMixId"

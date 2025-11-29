@@ -24,7 +24,7 @@ export type FragranceMix = {
   status: {
     fragranceMixStatusId: number;
     name: string;
-  }
+  };
   versions: {
     version: string;
     notes: string;
@@ -38,4 +38,11 @@ export type FragranceMixVersionOil = {
   fragranceOilId: number;
   name: string;
   mixRatio: number;
+};
+
+export type FragranceMixStatus = {
+  fragranceMixStatusId: number;
+  name: string;
+  colourHex: string;
+  order: number;
 };
