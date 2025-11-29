@@ -82,62 +82,67 @@ const KanbanPage = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className={styles.kanbanContainer}>
-        {fragranceMixStatuses.map((status) => (
-          <Droppable
-            key={status.fragranceMixStatusId}
-            droppableId={String(status.fragranceMixStatusId)}
-          >
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={styles.kanbanColumn}
-              >
-                <div
-                  className={styles.kanbanColumnHeader}
-                  style={{
-                    borderBottom: '1px solid black',
-                    background: `#${status.colourHex}`,
-                    color: '#fff',
-                    borderRadius: '4px 4px 0px 0px',
-                  }}
-                >
-                  <h3>{status.name}</h3>
-                </div>
-
-                <div className={styles.mixList}>
-                  {(mixesByStatus[status.fragranceMixStatusId] ?? []).map(
-                    (mix, index) => (
-                      <Draggable
-                        key={mix.fragranceMixId}
-                        draggableId={String(mix.fragranceMixId)}
-                        index={index}
-                        isDragDisabled={updateFragranceMixStatusPending}
-                      >
-                        {(dragProvided) => (
-                          <div
-                            ref={dragProvided.innerRef}
-                            {...dragProvided.draggableProps}
-                            {...dragProvided.dragHandleProps}
-                            className={styles.mixCard}
-                          >
-                            <p>{mix.name}</p>
-                            <p>{mix.notes}</p>
-                          </div>
-                        )}
-                      </Draggable>
-                    ),
-                  )}
-                  {provided.placeholder}
-                </div>
-              </div>
-            )}
-          </Droppable>
-        ))}
+    <div>
+      <div className="actions-container">
+        <h2>Kanban</h2>
       </div>
-    </DragDropContext>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className={styles.kanbanContainer}>
+          {fragranceMixStatuses.map((status) => (
+            <Droppable
+              key={status.fragranceMixStatusId}
+              droppableId={String(status.fragranceMixStatusId)}
+            >
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={styles.kanbanColumn}
+                >
+                  <div
+                    className={styles.kanbanColumnHeader}
+                    style={{
+                      borderBottom: '1px solid black',
+                      background: `#${status.colourHex}`,
+                      color: '#fff',
+                      borderRadius: '4px 4px 0px 0px',
+                    }}
+                  >
+                    <h3>{status.name}</h3>
+                  </div>
+
+                  <div className={styles.mixList}>
+                    {(mixesByStatus[status.fragranceMixStatusId] ?? []).map(
+                      (mix, index) => (
+                        <Draggable
+                          key={mix.fragranceMixId}
+                          draggableId={String(mix.fragranceMixId)}
+                          index={index}
+                          isDragDisabled={updateFragranceMixStatusPending}
+                        >
+                          {(dragProvided) => (
+                            <div
+                              ref={dragProvided.innerRef}
+                              {...dragProvided.draggableProps}
+                              {...dragProvided.dragHandleProps}
+                              className={styles.mixCard}
+                            >
+                              <p>{mix.name}</p>
+                              <p>{mix.notes}</p>
+                            </div>
+                          )}
+                        </Draggable>
+                      ),
+                    )}
+                    {provided.placeholder}
+                  </div>
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </div>
+      </DragDropContext>
+    </div>
   );
 };
 
