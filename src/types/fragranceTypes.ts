@@ -20,11 +20,18 @@ export type FragranceOilType = {
 export type FragranceMix = {
   fragranceMixId: number;
   name: string;
-  fragranceOils: {
-    fragranceOilId: number;
-    name: string;
-    mixRatio: number;
-  }[];
   notes: string;
-  version: string;
+  versions: {
+    version: string;
+    notes: string;
+    createdAt: string;
+    lastTestedAt: string | null;
+    fragranceOils: FragranceMixVersionOil[];
+  }[];
+};
+
+export type FragranceMixVersionOil = {
+  fragranceOilId: number;
+  name: string;
+  mixRatio: number;
 };

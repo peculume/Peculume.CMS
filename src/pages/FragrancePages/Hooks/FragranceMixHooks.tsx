@@ -14,8 +14,10 @@ type CreateFragranceMix = {
   }[];
 };
 
-type UpdateFragranceMixProps = CreateFragranceMix & {
+type UpdateFragranceMixProps = {
   fragranceMixId: number;
+  name: string;
+  notes: string;
 };
 
 const useCreateFragranceMix = ({

@@ -3,36 +3,20 @@ import { useNavigate } from 'react-router';
 import { ApiError } from 'types/productTypes';
 import {
   FragranceMix,
+  FragranceMixVersionOil,
   FragranceOil,
-  FragranceOilCategory,
-  FragranceOilType,
 } from 'types/fragranceTypes';
-import {
-  useCreateFragranceOil,
-  useGetFragranceOilCategories,
-  useGetFragranceOils,
-  useGetFragranceOilTypes,
-  useUpdateFragranceOil,
-} from '../Hooks/FragranceOilHooks';
-import CreateFragranceOilCategoryModal from '../Models/CreateFragranceOilCategoryModal';
-import {
-  useCreateFragranceMix,
-  useUpdateFragranceMix,
-} from '../Hooks/FragranceMixHook';
+import { useGetFragranceOils } from '../Hooks/FragranceOilHooks';
+import { useCreateFragranceMix } from '../Hooks/FragranceMixHooks';
 
-type FragranceMixFormProps = {
-  fragranceMix?: FragranceMix;
-};
-
-const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
+const FragranceMixForm: FC = () => {
   const navigate = useNavigate();
 
-  const [name, setName] = useState(fragranceMix?.name ?? '');
-  const [fragranceOils, setFragranceOils] = useState<
-    FragranceMix['fragranceOils']
-  >(fragranceMix?.fragranceOils ?? []);
-  const [notes, setNotes] = useState(fragranceMix?.notes ?? '');
-  const [version, setVersion] = useState(fragranceMix?.version ?? '1');
+  const [name, setName] = useState('');
+  const [notes, setNotes] = useState('');
+  const [fragranceOils, setFragranceOils] = useState<FragranceMixVersionOil[]>(
+    [],
+  );
 
   const [availableOils, setAvailableOils] = useState<FragranceOil[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -44,16 +28,6 @@ const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
       onSuccess: () => {
         setErrorMessage('');
         navigate(`/fragrance-mixes`);
-      },
-      onError: (error: ApiError) => {
-        setErrorMessage(error.message);
-      },
-    });
-
-  const { updateFragranceMix, updateFragranceMixPending } =
-    useUpdateFragranceMix({
-      onSuccess: () => {
-        setErrorMessage('');
       },
       onError: (error: ApiError) => {
         setErrorMessage(error.message);
@@ -89,9 +63,7 @@ const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
     e.target.selectedIndex = 0;
   };
 
-  const handleRemoveCategory = (
-    itemToRemove: FragranceMix['fragranceOils'][number],
-  ) => {
+  const handleRemoveItem = (itemToRemove: FragranceMixVersionOil) => {
     setFragranceOils((prev) =>
       prev.filter((item) => item.fragranceOilId !== item.fragranceOilId),
     );
@@ -106,26 +78,14 @@ const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (fragranceMix) {
-      updateFragranceMix({
-        fragranceMixId: fragranceMix.fragranceMixId,
-        name,
-        notes,
-        oils: fragranceOils.map((oil) => ({
-          fragranceOilId: oil.fragranceOilId,
-          mixRatio: oil.mixRatio,
-        })),
-      });
-    } else {
-      createFragranceMix({
-        name,
-        notes,
-        oils: fragranceOils.map((oil) => ({
-          fragranceOilId: oil.fragranceOilId,
-          mixRatio: oil.mixRatio,
-        })),
-      });
-    }
+    createFragranceMix({
+      name,
+      notes,
+      oils: fragranceOils.map((oil) => ({
+        fragranceOilId: oil.fragranceOilId,
+        mixRatio: oil.mixRatio,
+      })),
+    });
   };
 
   return (
@@ -150,7 +110,6 @@ const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
               </option>
             ))}
           </select>
-          {/* <CreateFragranceOilCategoryModal /> */}
         </div>
         <div className="selected">
           {fragranceOils.map((item) => (
@@ -159,9 +118,9 @@ const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
               <button
                 type="button"
                 className="remove-button"
-                onClick={() => handleRemoveCategory(item)}
+                onClick={() => handleRemoveItem(item)}
               >
-                ×
+                x
               </button>
             </div>
           ))}
@@ -182,7 +141,7 @@ const FragranceMixForm: FC<FragranceMixFormProps> = ({ fragranceMix }) => {
             className="submitButton"
             type="submit"
             value="Save"
-            disabled={createFragranceMixPending || updateFragranceMixPending}
+            disabled={createFragranceMixPending}
           />
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}

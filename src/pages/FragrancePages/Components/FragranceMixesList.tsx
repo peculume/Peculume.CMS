@@ -1,4 +1,4 @@
-import { useGetFragranceMixes } from '../Hooks/FragranceMixHook';
+import { useGetFragranceMixes } from '../Hooks/FragranceMixHooks';
 import styles from './FragranceComponents.module.scss';
 
 const FragranceMixesList = () => {
@@ -13,13 +13,21 @@ const FragranceMixesList = () => {
           <p>{fragranceMix.name}</p>
           <p>{fragranceMix.notes}</p>
 
-          <p className={styles.oilsHeader}>Oils:</p>
+          <p className={styles.oilsHeader}>Versions:</p>
           <div>
-            {fragranceMix.fragranceOils.map((oil) => (
-              <div key={oil.fragranceOilId} className={styles.oilLine}>
-                <span className={styles.oilName}>{oil.name}</span>
-                {' — '}
-                <span>Ratio: {oil.mixRatio}%</span>
+            {fragranceMix.versions.map((version) => (
+              <div>
+                <p>
+                  <b>V</b>
+                  {version.version}
+                </p>
+                {version.fragranceOils.map((oil) => (
+                  <div key={oil.fragranceOilId} className={styles.oilLine}>
+                    <span className={styles.oilName}>{oil.name}</span>
+                    {' — '}
+                    <span>Ratio: {oil.mixRatio}%</span>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
