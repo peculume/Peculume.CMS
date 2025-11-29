@@ -2,12 +2,11 @@ import { FC, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from 'types/productTypes';
 import {
-  FragranceMix,
   FragranceMixVersionOil,
   FragranceOil,
 } from 'types/fragranceTypes';
-import { useGetFragranceOils } from '../Hooks/FragranceOilHooks';
-import { useCreateFragranceMix } from '../Hooks/FragranceMixHooks';
+import { useGetFragranceOils } from '../../Hooks/FragranceOilHooks';
+import { useCreateFragranceMix } from '../../Hooks/FragranceMixHooks';
 
 const FragranceMixForm: FC = () => {
   const navigate = useNavigate();

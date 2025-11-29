@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import FragranceMixesList from './Components/FragranceMixesList';
+import FragranceMixesList from './Components/fragrance-mix/FragranceMixesList';
 
 const FragranceMixesPage = () => {
   const navigate = useNavigate();

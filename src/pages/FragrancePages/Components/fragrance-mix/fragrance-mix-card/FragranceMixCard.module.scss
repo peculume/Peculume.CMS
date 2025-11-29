@@ -1,0 +1,63 @@
+.fragranceMixCard {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .oilsHeader {
+    margin-top: 0.5rem;
+    font-weight: 600;
+  }
+
+  .oilLine {
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+  }
+
+  .oilName {
+    font-weight: 600;
+  }
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    width: 100%;
+    justify-content: space-between;
+
+        div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 600;
+
+        p {
+        margin-bottom: 0;
+        }
+    }
+}
+
+.statusPill {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 400;
+    color: #fff;
+    background-color: #027864;
+}
