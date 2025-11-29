@@ -15,7 +15,12 @@ const FragranceMixesCard = ({
           <BeakerIcon className={styles.fragranceIcon} />
           <p>{fragranceMix.name}</p>
         </div>
-        <span className={styles.statusPill}>{fragranceMix.status.name}</span>
+        <span
+          className={styles.statusPill}
+          style={{ background: `#${fragranceMix.status.colourHex}` }}
+        >
+          {fragranceMix.status.name}
+        </span>
         {/* ^ make component? How do we decide on status colour? */}
       </div>
       <p>{fragranceMix.notes}</p>

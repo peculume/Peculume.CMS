@@ -99,7 +99,9 @@ const KanbanPage = () => {
                   className={styles.kanbanColumnHeader}
                   style={{
                     borderBottom: '1px solid black',
-                    color: `#${status.colourHex}`,
+                    background: `#${status.colourHex}`,
+                    color: '#fff',
+                    borderRadius: '4px 4px 0px 0px',
                   }}
                 >
                   <h3>{status.name}</h3>
