@@ -20,6 +20,11 @@ type UpdateFragranceMixProps = {
   notes: string;
 };
 
+type UpdateFragranceMixStatusProps = {
+  fragranceMixId: number;
+  fragranceMixStatusId: number;
+};
+
 const useCreateFragranceMix = ({
   onSuccess,
   onError,
@@ -121,6 +126,60 @@ const useUpdateFragranceMix = ({
   };
 };
 
+const useUpdateFragranceMixStatus = ({
+  onSuccess,
+  onError,
+}: mutationProps<FragranceMix>) => {
+  const queryClient = useQueryClient();
+  const { authData } = useAuth();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (props: UpdateFragranceMixStatusProps) => {
+      if (!authData) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+      const response = await fetch(
+        `${API_BASE_URL}/fragrance-mixes/${props.fragranceMixId}/status`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
+            Authorization: `bearer ${authData.token}`,
+            adminUserId: authData.adminUser.adminUserId.toString(),
+          },
+          body: JSON.stringify(props),
+        },
+      );
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      return (await response.json()) as FragranceMix;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['getFragranceMix', data.fragranceMixId.toString()],
+      });
+      queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
+
+      onSuccess?.(data);
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    updateFragranceMixStatus: mutate,
+    updateFragranceMixStatusPending: isPending,
+  };
+};
+
 const useGetFragranceMixes = () => {
   const {
     data = [],
@@ -152,4 +211,9 @@ const useGetFragranceMixes = () => {
   };
 };
 
-export { useCreateFragranceMix, useUpdateFragranceMix, useGetFragranceMixes };
+export {
+  useCreateFragranceMix,
+  useUpdateFragranceMix,
+  useUpdateFragranceMixStatus,
+  useGetFragranceMixes,
+};

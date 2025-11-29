@@ -9,11 +9,6 @@
   align-items: flex-start;
   scroll-behavior: smooth;
 
-  /* prevent columns from squishing too small */
-  & > * {
-    flex: 0 0 auto;
-  }
-
   /* optional: nicer scrollbar in modern browsers */
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
@@ -29,6 +24,11 @@
   &::-webkit-scrollbar-thumb {
     border-radius: 999px;
     background: #cbd5e1;
+  }
+
+  /* prevent columns from squishing too small */
+  & > * {
+    flex: 0 0 auto;
   }
 }
 

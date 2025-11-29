@@ -11,6 +11,7 @@
     "create:component": "node scripts/create-component.cjs"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@supabase/supabase-js": "^2.49.4",
     "@tanstack/react-query": "^5.74.4",
     "date-fns": "^4.1.0",
