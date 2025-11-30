@@ -1,12 +1,14 @@
 export { default as CreateProductPage } from './CreateProductPage/CreateProductPage';
 
-/* Fragrances */
-export { default as CreateFragranceOilPage } from './FragrancePages/CreateFragranceOilPage';
-export { default as CreateFragranceMixPage } from './FragrancePages/CreateFragranceMixPage';
-export { default as FragranceMixesPage } from './FragrancePages/FragranceMixesPage';
-export { default as FragranceMixPage } from './FragrancePages/FragranceMixPage';
-export { default as FragranceOilPage } from './FragrancePages/FragranceOilPage';
-export { default as FragranceOilsPage } from './FragrancePages/FragranceOilsPage';
+/* Fragrance oils */
+export { default as CreateFragranceOilPage } from './fragrance-oil-pages/CreateFragranceOilPage';
+export { default as FragranceOilPage } from './fragrance-oil-pages/FragranceOilPage';
+export { default as FragranceOilsPage } from './fragrance-oil-pages/FragranceOilsPage';
+
+/* Fragrance mixes */
+export { default as CreateFragranceMixPage } from './fragrance-mix-pages/CreateFragranceMixPage';
+export { default as FragranceMixPage } from './fragrance-mix-pages/FragranceMixPage';
+export { default as FragranceMixesPage } from './fragrance-mix-pages/FragranceMixesPage';
 
 export { default as HomePage } from './HomePage/HomePage';
 export { default as LoginPage } from './LoginPage/LoginPage';

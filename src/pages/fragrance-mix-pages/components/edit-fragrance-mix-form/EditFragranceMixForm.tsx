@@ -1,25 +1,21 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { FC, FormEvent, useState } from 'react';
 import { ApiError } from 'types/productTypes';
-import { FragranceMix } from 'types/fragranceTypes';
-import { useGetFragranceOils } from '../Hooks/FragranceOilHooks';
-import { useUpdateFragranceMix } from '../Hooks/FragranceMixHooks';
+import { FragranceMix, FragranceMixStatus } from 'types/fragranceTypes';
+import { useUpdateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 
-type FragranceMixFormProps = {
+type EditFragranceMixFormProps = {
   fragranceMix: FragranceMix;
+  status: FragranceMixStatus;
 };
 
-const UpdateFragranceMixForm: FC<FragranceMixFormProps> = ({
+const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
   fragranceMix,
+  status,
 }) => {
-  const navigate = useNavigate();
-
-  const [name, setName] = useState(fragranceMix?.name ?? '');
-  const [notes, setNotes] = useState(fragranceMix?.notes ?? '');
+  const [name, setName] = useState(fragranceMix.name);
+  const [notes, setNotes] = useState(fragranceMix.notes);
 
   const [errorMessage, setErrorMessage] = useState('');
-
-  const { fragranceOils: dataFragranceOils } = useGetFragranceOils();
 
   const { updateFragranceMix, updateFragranceMixPending } =
     useUpdateFragranceMix({
@@ -38,6 +34,7 @@ const UpdateFragranceMixForm: FC<FragranceMixFormProps> = ({
       fragranceMixId: fragranceMix.fragranceMixId,
       name,
       notes,
+      statusId: status.fragranceMixStatusId,
     });
   };
 
@@ -76,4 +73,4 @@ const UpdateFragranceMixForm: FC<FragranceMixFormProps> = ({
   );
 };
 
-export default UpdateFragranceMixForm;
+export default EditFragranceMixForm;

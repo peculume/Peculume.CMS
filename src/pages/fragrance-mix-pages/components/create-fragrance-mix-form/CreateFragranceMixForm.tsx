@@ -2,11 +2,11 @@ import { FC, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from 'types/productTypes';
 import { FragranceMixVersionOil, FragranceOil } from 'types/fragranceTypes';
-import { useGetFragranceOils } from '../../../Hooks/FragranceOilHooks';
-import { useCreateFragranceMix } from '../../../Hooks/FragranceMixHooks';
-import styles from './FragranceMixForm.module.scss';
+import { useCreateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
+import { useGetFragranceOils } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
+import styles from './CreateFragranceMixForm.module.scss';
 
-const FragranceMixForm: FC = () => {
+const CreateFragranceMixForm: FC = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -166,4 +166,4 @@ const FragranceMixForm: FC = () => {
   );
 };
 
-export default FragranceMixForm;
+export default CreateFragranceMixForm;

@@ -3,7 +3,7 @@ import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
 import { FragranceMixStatus } from 'types/fragranceTypes';
 
 const useGetAllFragranceMixStatuses = () => {
-  const { data = [] } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: ['getAllFragranceMixStatuses'],
     queryFn: async () => {
       const url = new URL(`${API_BASE_URL}/config/fragrance-mix-statuses`);
@@ -25,6 +25,7 @@ const useGetAllFragranceMixStatuses = () => {
 
   return {
     fragranceMixStatuses: data,
+    isFragranceMixStatusesLoading: isLoading,
   };
 };
 

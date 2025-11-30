@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
-import { useCreateFragranceOilCategories } from '../Hooks/FragranceOilHooks';
+import { useCreateFragranceOilCategories } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
 
 const CreateFragranceOilCategoryModal = () => {
   const [open, setOpen] = useState(false);

@@ -2,9 +2,9 @@ import { useNavigate, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
 import { FragranceOil } from 'types/fragranceTypes';
-import FragranceOilForm from './Components/FragranceOilForm';
+import FragranceOilForm from './components/fragrance-oil-form/FragranceOilForm';
 
-const FragranceMixPage = () => {
+const FragranceOilPage = () => {
   const { fragranceOilId } = useParams();
   const navigate = useNavigate();
 
@@ -48,4 +48,4 @@ const FragranceMixPage = () => {
   );
 };
 
-export default FragranceMixPage;
+export default FragranceOilPage;

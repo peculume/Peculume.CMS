@@ -18,6 +18,7 @@ type UpdateFragranceMixProps = {
   fragranceMixId: number;
   name: string;
   notes: string;
+  statusId: number;
 };
 
 type UpdateFragranceMixStatusProps = {

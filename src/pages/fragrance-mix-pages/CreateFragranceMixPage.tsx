@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import FragranceMixForm from './Components/fragrance-mix/fragrance-mix-form/FragranceMixForm';
+import CreateFragranceMixForm from './components/create-fragrance-mix-form/CreateFragranceMixForm';
 
 const CreateFragranceMixPage = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const CreateFragranceMixPage = () => {
         </button>
         <h2 className="title">Add fragrance mix</h2>
       </div>
-      <FragranceMixForm />
+      <CreateFragranceMixForm />
     </div>
   );
 };

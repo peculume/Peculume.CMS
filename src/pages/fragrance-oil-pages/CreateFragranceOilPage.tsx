@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import FragranceOilForm from './Components/FragranceOilForm';
+import FragranceOilForm from './components/fragrance-oil-form/FragranceOilForm';
 
 const CreateFragranceOilPage = () => {
   const navigate = useNavigate();

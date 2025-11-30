@@ -11,8 +11,8 @@ import {
   useGetFragranceOilCategories,
   useGetFragranceOilTypes,
   useUpdateFragranceOil,
-} from '../Hooks/FragranceOilHooks';
-import CreateFragranceOilCategoryModal from '../Models/CreateFragranceOilCategoryModal';
+} from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
+import CreateFragranceOilCategoryModal from '../create-fragrance-oil-category-modal/CreateFragranceOilCategoryModal';
 
 type FragranceOilFormProps = {
   fragranceOil?: FragranceOil;

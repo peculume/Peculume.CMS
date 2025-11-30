@@ -9,7 +9,7 @@ import { useGetAllFragranceMixStatuses } from 'hooks/config-hooks/ConfigHooks';
 import {
   useGetFragranceMixes,
   useUpdateFragranceMixStatus,
-} from 'pages/FragrancePages/Hooks/FragranceMixHooks';
+} from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 import styles from './KanbanPage.module.scss';
 
 const KanbanPage = () => {

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useGetFragranceOils } from '../Hooks/FragranceOilHooks';
+import { useGetFragranceOils } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
 
 const FragranceOilsTable = () => {
   const navigate = useNavigate();
