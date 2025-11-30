@@ -8,8 +8,8 @@ const FragranceMixesList = () => {
     <div className={styles.fragranceMixesContainer}>
       {fragranceMixes.map((fragranceMix) => (
         <FragranceMixesCard
-          fragranceMix={fragranceMix}
           key={fragranceMix.fragranceMixId}
+          fragranceMix={fragranceMix}
         />
       ))}
     </div>

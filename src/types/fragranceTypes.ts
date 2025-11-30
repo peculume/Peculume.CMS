@@ -23,6 +23,7 @@ export type FragranceMix = {
   notes: string;
   status: FragranceMixStatus;
   versions: {
+    fragranceMixVersionId: number;
     version: string;
     notes: string;
     createdAt: string;

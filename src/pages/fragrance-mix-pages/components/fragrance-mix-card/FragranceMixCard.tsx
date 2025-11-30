@@ -10,10 +10,7 @@ const FragranceMixesCard = ({
 }) => {
   return (
     <Link to={`/fragrance-mixes/${fragranceMix.fragranceMixId}`}>
-      <div
-        key={fragranceMix.fragranceMixId}
-        className={styles.fragranceMixCard}
-      >
+      <div className={styles.fragranceMixCard}>
         <div className={styles.cardHeader}>
           <div>
             <BeakerIcon className={styles.fragranceIcon} />
@@ -32,7 +29,7 @@ const FragranceMixesCard = ({
         <p className={styles.oilsHeader}>Versions:</p>
         <div>
           {fragranceMix.versions.map((version) => (
-            <div id={version.version}>
+            <div key={version.fragranceMixVersionId} id={version.version}>
               <p>
                 <b>V</b>
                 {version.version}

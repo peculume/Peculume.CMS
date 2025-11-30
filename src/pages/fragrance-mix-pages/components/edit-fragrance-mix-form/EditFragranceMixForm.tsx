@@ -1,4 +1,5 @@
 import { FC, FormEvent, useState } from 'react';
+import { format } from 'date-fns';
 import { ApiError } from 'types/productTypes';
 import { FragranceMix, FragranceMixStatus } from 'types/fragranceTypes';
 import { useUpdateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
@@ -68,6 +69,17 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
           />
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}
+      </div>
+      <div>
+        {fragranceMix.versions.map((version) => (
+          <div key={version.fragranceMixVersionId} className="versionCard">
+            <p>Version: {version.version}</p>
+            <p>
+              Created At:{' '}
+              {format(new Date(version.createdAt), 'dd MMM yyyy HH:mm')}
+            </p>
+          </div>
+        ))}
       </div>
     </form>
   );
