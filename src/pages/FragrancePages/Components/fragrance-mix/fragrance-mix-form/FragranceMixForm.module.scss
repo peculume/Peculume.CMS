@@ -1,0 +1,44 @@
+.selectedOilsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selectedOilItemContainer {
+  display: grid;
+  grid-template-columns: 1fr 80px 20px 40px; /* name | input | % | button */
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.selectedOilItemContainer > * {
+  font-size: 0.9rem;
+}
+
+.selectedOilItemContainer input {
+  width: 100%;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Remove button */
+.selectedOilItemContainer button {
+  border: none;
+  background: #f87171;
+  color: white;
+  padding: 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+
+  &:hover {
+    background: #ef4444;
+  }
+}

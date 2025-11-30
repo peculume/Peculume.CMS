@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import FragranceMixForm from './Components/fragrance-mix/FragranceMixForm';
+import FragranceMixForm from './Components/fragrance-mix/fragrance-mix-form/FragranceMixForm';
 
 const CreateFragranceMixPage = () => {
   const navigate = useNavigate();

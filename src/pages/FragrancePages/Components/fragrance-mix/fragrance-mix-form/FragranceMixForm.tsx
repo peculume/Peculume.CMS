@@ -1,12 +1,10 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from 'types/productTypes';
-import {
-  FragranceMixVersionOil,
-  FragranceOil,
-} from 'types/fragranceTypes';
-import { useGetFragranceOils } from '../../Hooks/FragranceOilHooks';
-import { useCreateFragranceMix } from '../../Hooks/FragranceMixHooks';
+import { FragranceMixVersionOil, FragranceOil } from 'types/fragranceTypes';
+import { useGetFragranceOils } from '../../../Hooks/FragranceOilHooks';
+import { useCreateFragranceMix } from '../../../Hooks/FragranceMixHooks';
+import styles from './FragranceMixForm.module.scss';
 
 const FragranceMixForm: FC = () => {
   const navigate = useNavigate();
@@ -64,7 +62,9 @@ const FragranceMixForm: FC = () => {
 
   const handleRemoveItem = (itemToRemove: FragranceMixVersionOil) => {
     setFragranceOils((prev) =>
-      prev.filter((item) => item.fragranceOilId !== item.fragranceOilId),
+      prev.filter(
+        (item) => item.fragranceOilId !== itemToRemove.fragranceOilId,
+      ),
     );
     setAvailableOils((prev) => [
       ...prev,
@@ -72,6 +72,16 @@ const FragranceMixForm: FC = () => {
         (item) => item.fragranceOilId === itemToRemove.fragranceOilId,
       )!,
     ]);
+  };
+
+  const updateMixRation = (id: number, value: string) => {
+    setFragranceOils((prev) =>
+      prev.map((item) =>
+        item.fragranceOilId === id
+          ? { ...item, mixRatio: Number(value) }
+          : item,
+      ),
+    );
   };
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -110,15 +120,22 @@ const FragranceMixForm: FC = () => {
             ))}
           </select>
         </div>
-        <div className="selected">
+        <div className={styles.selectedOilsContainer}>
           {fragranceOils.map((item) => (
-            <div key={item.fragranceOilId} className="item">
-              {item.name}
-              <button
-                type="button"
-                className="remove-button"
-                onClick={() => handleRemoveItem(item)}
-              >
+            <div
+              key={item.fragranceOilId}
+              className={styles.selectedOilItemContainer}
+            >
+              <p>{item.name}</p>
+              <input
+                type="text"
+                value={item.mixRatio}
+                onChange={(e) =>
+                  updateMixRation(item.fragranceOilId, e.target.value)
+                }
+              />
+              %
+              <button type="button" onClick={() => handleRemoveItem(item)}>
                 x
               </button>
             </div>
