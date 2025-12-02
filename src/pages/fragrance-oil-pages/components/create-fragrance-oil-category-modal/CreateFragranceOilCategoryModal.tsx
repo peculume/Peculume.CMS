@@ -1,17 +1,25 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Dialog } from 'radix-ui';
 import { useCreateFragranceOilCategories } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
+import { FragranceOilCategory } from 'types/fragranceTypes';
 
-const CreateFragranceOilCategoryModal = () => {
+type CreateFragranceOilCategoryModalProps = {
+  onItemsAddedSuccessfully: (items: FragranceOilCategory[]) => void;
+};
+
+const CreateFragranceOilCategoryModal: FC<
+  CreateFragranceOilCategoryModalProps
+> = ({ onItemsAddedSuccessfully }) => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
 
   const { createFragranceOilCategories } = useCreateFragranceOilCategories({
-    onSuccess: () => {
+    onSuccess: (data) => {
       setCategory('');
       setError('');
       setOpen(false);
+      onItemsAddedSuccessfully(data);
     },
     onError: (error) => {
       setError(error.message);

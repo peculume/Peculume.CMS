@@ -13,6 +13,7 @@ import {
   useUpdateFragranceOil,
 } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
 import CreateFragranceOilCategoryModal from '../create-fragrance-oil-category-modal/CreateFragranceOilCategoryModal';
+import { SearchableComboBox } from 'components';
 
 type FragranceOilFormProps = {
   fragranceOil?: FragranceOil;
@@ -80,14 +81,21 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
       (category) => category.fragranceOilCategoryId === selectedCategoryId,
     );
     if (selectedCategory) {
-      setOilCategories((prev) => [...prev, selectedCategory]);
-      setAvailableCategories((prev) =>
-        prev.filter(
-          (category) => category.fragranceOilCategoryId !== selectedCategoryId,
-        ),
-      );
+      handleSelectCategories([selectedCategory]);
     }
     e.target.selectedIndex = 0;
+  };
+
+  const handleSelectCategories = (categories: FragranceOilCategory[]) => {
+    setOilCategories((prev) => [...prev, ...categories]);
+    setAvailableCategories((prev) =>
+      prev.filter(
+        (category) =>
+          !categories.some(
+            (c) => category.fragranceOilCategoryId === c.fragranceOilCategoryId,
+          ),
+      ),
+    );
   };
 
   const handleRemoveCategory = (categoryToRemove: FragranceOilCategory) => {
@@ -158,45 +166,47 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
       {!isFragranceOilTypesLoading && (
         <div className="formGroup">
           <label htmlFor="type">Type</label>
-          <div className="selector">
-            <select
-              id="type"
-              onChange={(e) =>
-                setOilType(
-                  fragranceOilTypes.find(
-                    ({ fragranceOilTypeId }) =>
-                      fragranceOilTypeId == Number(e.target.value),
-                  ) ?? null,
-                )
-              }
-              defaultValue={fragranceOil?.type?.fragranceOilTypeId ?? ''}
-            >
-              <option value="">Select a type...</option>
-              {fragranceOilTypes.map(({ fragranceOilTypeId, name }) => (
-                <option key={fragranceOilTypeId} value={fragranceOilTypeId}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            {/* <CreateProductTypeModal /> */}
-          </div>
+          <SearchableComboBox<FragranceOilType>
+            items={fragranceOilTypes}
+            onChange={(item) => {
+              setOilType(
+                fragranceOilTypes.find(
+                  ({ fragranceOilTypeId }) =>
+                    fragranceOilTypeId.toString() === item,
+                ) ?? null,
+              );
+            }}
+            getOptionLabel={(e) => e.name}
+            getOptionValue={(e) => e.fragranceOilTypeId.toString()}
+            placeholder="Select a type..."
+            label="Type"
+            value={oilType?.fragranceOilTypeId.toString() ?? null}
+          />
         </div>
       )}
       <div className="formGroup">
         <label htmlFor="categories">Categories</label>
         <div className="selector">
-          <select id="categories" onChange={handleCategorySelect}>
-            <option value="">Select a tag...</option>
-            {availableCategories.map((category) => (
-              <option
-                key={category.fragranceOilCategoryId}
-                value={category.fragranceOilCategoryId}
-              >
-                {category.name}
-              </option>
-            ))}
-          </select>
-          <CreateFragranceOilCategoryModal />
+          <SearchableComboBox<FragranceOilCategory>
+            items={availableCategories}
+            onChange={(item) => {
+              const selectedCategory = availableCategories.find(
+                (category) =>
+                  category.fragranceOilCategoryId.toString() === item,
+              );
+              if (selectedCategory) {
+                handleSelectCategories([selectedCategory]);
+              }
+            }}
+            getOptionLabel={(e) => e.name}
+            getOptionValue={(e) => e.fragranceOilCategoryId.toString()}
+            placeholder="Select a category..."
+            label="Category"
+            value={null}
+          />
+          <CreateFragranceOilCategoryModal
+            onItemsAddedSuccessfully={handleSelectCategories}
+          />
         </div>
         <div className="selected">
           {oilCategories.map((category) => (
