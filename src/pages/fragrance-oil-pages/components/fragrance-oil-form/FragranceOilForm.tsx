@@ -14,6 +14,7 @@ import {
 } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
 import CreateFragranceOilCategoryModal from '../create-fragrance-oil-category-modal/CreateFragranceOilCategoryModal';
 import { SearchableComboBox } from 'components';
+import NotesSection from '../notes-section/NotesSection';
 
 type FragranceOilFormProps = {
   fragranceOil?: FragranceOil;
@@ -24,6 +25,24 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
 
   const [name, setName] = useState(fragranceOil?.name ?? '');
   const [brand, setBrand] = useState(fragranceOil?.brand ?? '');
+  const [topNotes, setTopNotes] = useState(
+    fragranceOil?.noteAssignments
+      .filter((note) => note.layer === 'Top')
+      .map(({ name }) => name)
+      .join(', ') ?? '',
+  );
+  const [heartNotes, setHeartNotes] = useState(
+    fragranceOil?.noteAssignments
+      .filter((note) => note.layer === 'Heart')
+      .map(({ name }) => name)
+      .join(', ') ?? '',
+  );
+  const [baseNotes, setBaseNotes] = useState(
+    fragranceOil?.noteAssignments
+      .filter((note) => note.layer === 'Base')
+      .map(({ name }) => name)
+      .join(', ') ?? '',
+  );
   const [oilCategories, setOilCategories] = useState<FragranceOilCategory[]>(
     fragranceOil?.categories ?? [],
   );
@@ -125,9 +144,9 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
         categoryIds: oilCategories.map((cat) => cat.fragranceOilCategoryId),
         typeId: oilType.fragranceOilTypeId,
         notes,
-        baseNotesIds: [],
-        heartNotesIds: [],
-        topNotesIds: [],
+        topNotes,
+        baseNotes,
+        heartNotes,
       });
     } else {
       createFragranceOil({
@@ -136,9 +155,9 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
         categoryIds: oilCategories.map((cat) => cat.fragranceOilCategoryId),
         typeId: oilType.fragranceOilTypeId,
         notes,
-        baseNotesIds: [],
-        heartNotesIds: [],
-        topNotesIds: [],
+        topNotes,
+        baseNotes,
+        heartNotes,
       });
     }
   };
@@ -163,6 +182,14 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
           onChange={(e) => setBrand(e.target.value)}
         />
       </div>
+      <NotesSection
+        topNotes={topNotes}
+        setTopNotes={setTopNotes}
+        heartNotes={heartNotes}
+        setHeartNotes={setHeartNotes}
+        baseNotes={baseNotes}
+        setBaseNotes={setBaseNotes}
+      />
       {!isFragranceOilTypesLoading && (
         <div className="formGroup">
           <label htmlFor="type">Type</label>

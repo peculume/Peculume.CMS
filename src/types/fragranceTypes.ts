@@ -2,9 +2,16 @@ export type FragranceOil = {
   fragranceOilId: number;
   name: string;
   brand: string;
+  noteAssignments: FragranceOilNote[];
   categories: FragranceOilCategory[];
   type: FragranceOilType;
   notes: string;
+};
+
+export type FragranceOilNote = {
+  fragranceOilNoteId: number;
+  name: string;
+  layer: 'Top' | 'Heart' | 'Base';
 };
 
 export type FragranceOilCategory = {
