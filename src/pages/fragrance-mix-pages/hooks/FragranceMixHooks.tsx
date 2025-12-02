@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
 import { mutationProps } from 'hooks';
 import { useAuth } from 'providers/AuthProvider';
-import { FragranceMix } from 'types/fragranceTypes';
+import { FragranceMix, FragranceMixVersion } from 'types/fragranceTypes';
 import { ApiError } from 'types/productTypes';
 
 type CreateFragranceMix = {
@@ -24,6 +24,20 @@ type UpdateFragranceMixProps = {
 type UpdateFragranceMixStatusProps = {
   fragranceMixId: number;
   fragranceMixStatusId: number;
+};
+
+type UpdateFragranceMixVerionProps = {
+  fragranceMixId: number;
+  fragranceMixVersionId: number;
+  notes: string;
+  oils: {
+    fragranceOilId: number;
+    mixRatio: number;
+  }[];
+};
+
+type FragranceMixVersionWithFragranceMixId = FragranceMixVersion & {
+  fragranceMixId: number;
 };
 
 const useCreateFragranceMix = ({
@@ -110,7 +124,7 @@ const useUpdateFragranceMix = ({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['getFragranceMix', data.fragranceMixId.toString()],
+        queryKey: ['getFragranceMix', data.fragranceMixId],
       });
       queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
 
@@ -164,7 +178,7 @@ const useUpdateFragranceMixStatus = ({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['getFragranceMix', data.fragranceMixId.toString()],
+        queryKey: ['getFragranceMix', data.fragranceMixId],
       });
       queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
 
@@ -212,9 +226,68 @@ const useGetFragranceMixes = () => {
   };
 };
 
+const useUpdateFragranceMixVersion = ({
+  onSuccess,
+  onError,
+}: mutationProps<FragranceMixVersionWithFragranceMixId>) => {
+  const queryClient = useQueryClient();
+  const { authData } = useAuth();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (props: UpdateFragranceMixVerionProps) => {
+      if (!authData) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+      const response = await fetch(
+        `${API_BASE_URL}/fragrance-mixes/${props.fragranceMixId}/version/${props.fragranceMixVersionId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
+            Authorization: `bearer ${authData.token}`,
+            adminUserId: authData.adminUser.adminUserId.toString(),
+          },
+          body: JSON.stringify(props),
+        },
+      );
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      const value =
+        (await response.json()) as FragranceMixVersionWithFragranceMixId;
+      return {
+        ...value,
+        fragranceMixId: props.fragranceMixId,
+      };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['getFragranceMix', data.fragranceMixId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
+      onSuccess?.(data);
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    updateFragranceMixVersion: mutate,
+    updateFragranceMixVersionPending: isPending,
+  };
+};
+
 export {
   useCreateFragranceMix,
   useUpdateFragranceMix,
   useUpdateFragranceMixStatus,
+  useUpdateFragranceMixVersion,
   useGetFragranceMixes,
 };

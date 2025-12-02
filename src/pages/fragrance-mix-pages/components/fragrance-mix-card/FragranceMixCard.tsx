@@ -38,7 +38,7 @@ const FragranceMixesCard = ({
                 <div key={oil.fragranceOilId} className={styles.oilLine}>
                   <span className={styles.oilName}>{oil.name}</span>
                   {' — '}
-                  <span>Ratio: {oil.mixRatio}%</span>
+                  <span>Ratio: {oil.mixRatio}</span>
                 </div>
               ))}
             </div>

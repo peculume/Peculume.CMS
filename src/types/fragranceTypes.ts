@@ -22,14 +22,16 @@ export type FragranceMix = {
   name: string;
   notes: string;
   status: FragranceMixStatus;
-  versions: {
-    fragranceMixVersionId: number;
-    version: string;
-    notes: string;
-    createdAt: string;
-    lastTestedAt: string | null;
-    fragranceOils: FragranceMixVersionOil[];
-  }[];
+  versions: FragranceMixVersion[];
+};
+
+export type FragranceMixVersion = {
+  fragranceMixVersionId: number;
+  version: string;
+  notes: string;
+  createdAt: string;
+  lastTestedAt: string | null;
+  fragranceOils: FragranceMixVersionOil[];
 };
 
 export type FragranceMixVersionOil = {

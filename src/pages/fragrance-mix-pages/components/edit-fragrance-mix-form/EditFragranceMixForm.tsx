@@ -1,8 +1,9 @@
 import { FC, FormEvent, useState } from 'react';
-import { format } from 'date-fns';
 import { ApiError } from 'types/productTypes';
 import { FragranceMix, FragranceMixStatus } from 'types/fragranceTypes';
 import { useUpdateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
+import EditVersionForm from '../edit-version-form/EditVersionForm';
+import styles from './EditFragranceMixForm.module.scss';
 
 type EditFragranceMixFormProps = {
   fragranceMix: FragranceMix;
@@ -70,16 +71,26 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}
       </div>
-      <div>
-        {fragranceMix.versions.map((version) => (
-          <div key={version.fragranceMixVersionId} className="versionCard">
-            <p>Version: {version.version}</p>
-            <p>
-              Created At:{' '}
-              {format(new Date(version.createdAt), 'dd MMM yyyy HH:mm')}
-            </p>
-          </div>
-        ))}
+      <div className={styles.versionsSection}>
+        <div className={styles.versionsHeader}>
+          <h3>Versions</h3>
+        </div>
+        <div className={styles.versionsContainer}>
+          {fragranceMix.versions.map((version) => (
+            <EditVersionForm
+              key={version.fragranceMixVersionId}
+              fragranceMixId={fragranceMix.fragranceMixId}
+              version={version}
+            />
+          ))}
+          <button
+            type="button"
+            className={styles.addVersionCard}
+            onClick={() => console.log('TODO: add version')}
+          >
+            +
+          </button>
+        </div>
       </div>
     </form>
   );

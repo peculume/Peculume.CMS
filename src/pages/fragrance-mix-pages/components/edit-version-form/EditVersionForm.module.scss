@@ -1,0 +1,156 @@
+.versionCard {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 260px;
+  max-width: 360px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    text-align: left;
+  }
+}
+
+.versionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .versionTitle {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .versionDate {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+}
+
+.notesGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+
+  input {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+
+    &:focus {
+      outline: none;
+      border-color: #027864;
+      box-shadow: 0 0 0 1px rgba(2, 120, 100, 0.15);
+    }
+  }
+}
+
+.oilsSection {
+  margin-top: 0.25rem;
+}
+
+.oilsHeader {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.oilList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* [longest name] [ratio input] [X button] */
+.oilLine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 80px auto;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+.oilName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  word-break: break-word;
+}
+
+.oilInput {
+  width: 100%;
+  padding: 0.25rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  text-align: right;
+
+  &:focus {
+    outline: none;
+    border-color: #027864;
+    box-shadow: 0 0 0 1px rgba(2, 120, 100, 0.15);
+  }
+}
+
+.removeOilButton {
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover {
+    background: #fecaca;
+  }
+}
+
+/* Add-oil dropdown row */
+.addOilRow {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.addOilLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.addOilSelect {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  background: #f9fafb;
+
+  &:focus {
+    outline: none;
+    border-color: #027864;
+    box-shadow: 0 0 0 1px rgba(2, 120, 100, 0.15);
+  }
+}

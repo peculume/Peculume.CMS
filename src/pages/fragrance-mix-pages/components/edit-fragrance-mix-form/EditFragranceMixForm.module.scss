@@ -1,44 +1,54 @@
-.selectedOilsContainer {
+.versionsSection {
+  border-top: 1px solid #1f2933;
+  padding-top: 1rem;
+}
+
+.versionsHeader {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.selectedOilItemContainer {
-  display: grid;
-  grid-template-columns: 1fr 80px 20px 40px; /* name | input | % | button */
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
 
-  padding: 0.45rem 0.6rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  background: #fff;
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
 }
 
-.selectedOilItemContainer > * {
-  font-size: 0.9rem;
+.versionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.selectedOilItemContainer input {
-  width: 100%;
-  padding: 0.25rem 0.4rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-}
-
-/* Remove button */
-.selectedOilItemContainer button {
-  border: none;
-  background: #f87171;
-  color: white;
-  padding: 0.25rem;
-  border-radius: 4px;
+.addVersionCard {
+  min-width: 260px;
+  max-width: 360px;
+  height: 120px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  background: #fafafa;
+  color: #9ca3af;
+  font-size: 3rem;
+  font-weight: 300;
   cursor: pointer;
-  font-weight: bold;
-  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: border-color 0.15s ease, background 0.15s ease,
+    transform 0.1s ease;
 
   &:hover {
-    background: #ef4444;
+    border-color: #027864;
+    background: #f5fdfb;
+    color: #027864;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0px);
   }
 }
