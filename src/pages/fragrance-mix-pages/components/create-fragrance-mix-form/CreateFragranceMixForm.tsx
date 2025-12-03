@@ -97,8 +97,6 @@ const CreateFragranceMixForm: FC = () => {
   };
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
-    debugger;
-    return;
     e.preventDefault();
 
     createFragranceMix({
