@@ -4,6 +4,7 @@ import { ApiError } from 'types/productTypes';
 import { FragranceMixVersionOil, FragranceOil } from 'types/fragranceTypes';
 import { useCreateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 import { useGetFragranceOils } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
+import CreateFragranceOilModal from 'components/create-fragrance-oil-modal/CreateFragranceOilModal';
 import styles from './CreateFragranceMixForm.module.scss';
 
 const CreateFragranceMixForm: FC = () => {
@@ -74,6 +75,17 @@ const CreateFragranceMixForm: FC = () => {
     ]);
   };
 
+  const onCreateFragranceOil = (newOil: FragranceOil) => {
+    setFragranceOils((prev) => [
+      ...prev,
+      {
+        fragranceOilId: newOil.fragranceOilId,
+        name: newOil.name,
+        mixRatio: 0,
+      },
+    ]);
+  };
+
   const updateMixRation = (id: number, value: string) => {
     setFragranceOils((prev) =>
       prev.map((item) =>
@@ -85,6 +97,8 @@ const CreateFragranceMixForm: FC = () => {
   };
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+    debugger;
+    return;
     e.preventDefault();
 
     createFragranceMix({
@@ -119,6 +133,7 @@ const CreateFragranceMixForm: FC = () => {
               </option>
             ))}
           </select>
+          <CreateFragranceOilModal onCreate={onCreateFragranceOil} />
         </div>
         <div className={styles.selectedOilsContainer}>
           {fragranceOils.map((item) => (

@@ -1,5 +1,4 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { FC, useEffect, useState } from 'react';
 import { ApiError } from 'types/productTypes';
 import {
   FragranceOil,
@@ -18,11 +17,13 @@ import NotesSection from '../notes-section/NotesSection';
 
 type FragranceOilFormProps = {
   fragranceOil?: FragranceOil;
+  onCreate?: (newOil: FragranceOil) => void;
 };
 
-const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
-  const navigate = useNavigate();
-
+const FragranceOilForm: FC<FragranceOilFormProps> = ({
+  fragranceOil,
+  onCreate,
+}) => {
   const [name, setName] = useState(fragranceOil?.name ?? '');
   const [brand, setBrand] = useState(fragranceOil?.brand ?? '');
   const [topNotes, setTopNotes] = useState(
@@ -56,10 +57,8 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
   >([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const {
-    fragranceOilCategories: dataFragranceOilCategories,
-    isFragranceOilCategoriesLoading,
-  } = useGetFragranceOilCategories();
+  const { fragranceOilCategories: dataFragranceOilCategories } =
+    useGetFragranceOilCategories();
   const { fragranceOilTypes, isFragranceOilTypesLoading } =
     useGetFragranceOilTypes();
 
@@ -67,7 +66,8 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
     useCreateFragranceOil({
       onSuccess: (fragranceOil) => {
         setErrorMessage('');
-        navigate(`/fragrance-oils`);
+        // navigate(`/fragrance-oils`);
+        onCreate?.(fragranceOil);
       },
       onError: (error: ApiError) => {
         setErrorMessage(error.message);
@@ -94,17 +94,6 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
     setAvailableCategories(filtered);
   }, [dataFragranceOilCategories]);
 
-  const handleCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategoryId = Number(e.target.value);
-    const selectedCategory = availableCategories.find(
-      (category) => category.fragranceOilCategoryId === selectedCategoryId,
-    );
-    if (selectedCategory) {
-      handleSelectCategories([selectedCategory]);
-    }
-    e.target.selectedIndex = 0;
-  };
-
   const handleSelectCategories = (categories: FragranceOilCategory[]) => {
     setOilCategories((prev) => [...prev, ...categories]);
     setAvailableCategories((prev) =>
@@ -128,9 +117,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
     setAvailableCategories((prev) => [...prev, categoryToRemove]);
   };
 
-  const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleOnSubmit = () => {
     if (!oilType) {
       setErrorMessage('Please select a product type');
       return;
@@ -163,7 +150,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
   };
 
   return (
-    <form className="form" onSubmit={handleOnSubmit}>
+    <div className="form">
       <div className="formGroup">
         <label htmlFor="name">Name</label>
         <input
@@ -265,12 +252,13 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({ fragranceOil }) => {
             className="submitButton"
             type="submit"
             value="Save"
+            onClick={handleOnSubmit}
             disabled={createFragranceOilPending || updateFragranceOilPending}
           />
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}
       </div>
-    </form>
+    </div>
   );
 };
 

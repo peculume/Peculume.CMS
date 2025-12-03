@@ -14,7 +14,7 @@ const CreateFragranceOilPage = () => {
         </button>
         <h2 className="title">Add fragrance</h2>
       </div>
-      <FragranceOilForm />
+      <FragranceOilForm onCreate={() => navigate('/fragrance-oils')} />
     </div>
   );
 };

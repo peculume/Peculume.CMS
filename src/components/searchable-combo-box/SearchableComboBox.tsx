@@ -101,23 +101,15 @@ function SearchableComboBox<T>({
         </Dialog.Trigger>
 
         <Dialog.Portal>
-          <Dialog.Overlay className={styles.backdrop} />
+          <Dialog.Overlay className="dialogOverlay" />
           <Dialog.Content
-            className={styles.modal}
+            className="dialogContent"
             aria-label={label || 'Select option'}
           >
-            <div className={styles.modalHeader}>
-              <div className={styles.modalTitle}>{label || 'Select'}</div>
-              <Dialog.Close asChild>
-                <button
-                  type="button"
-                  className={styles.closeBtn}
-                  aria-label="Close"
-                >
-                  ×
-                </button>
-              </Dialog.Close>
-            </div>
+            <Dialog.Title className="dialogTitle">{label}</Dialog.Title>
+            <Dialog.Description className="dialogDescription">
+              {placeholder ? placeholder : ''}
+            </Dialog.Description>
 
             <div className={styles.searchRow}>
               <input
