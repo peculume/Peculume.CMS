@@ -124,7 +124,7 @@ const useUpdateFragranceMix = ({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['getFragranceMix', data.fragranceMixId],
+        queryKey: ['getFragranceMix', data.fragranceMixId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
 
@@ -178,7 +178,7 @@ const useUpdateFragranceMixStatus = ({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['getFragranceMix', data.fragranceMixId],
+        queryKey: ['getFragranceMix', data.fragranceMixId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
 
@@ -268,7 +268,7 @@ const useUpdateFragranceMixVersion = ({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['getFragranceMix', data.fragranceMixId],
+        queryKey: ['getFragranceMix', data.fragranceMixId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
       onSuccess?.(data);
