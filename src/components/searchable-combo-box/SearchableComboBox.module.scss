@@ -18,9 +18,7 @@
   justify-content: space-between;
   gap: 8px;
   cursor: pointer;
-  transition:
-    box-shadow 120ms ease,
-    border-color 120ms ease;
+  transition: box-shadow 120ms ease, border-color 120ms ease;
 
   &:hover {
     border-color: var(--border-strong, #cbd5e1);
@@ -62,13 +60,14 @@
 }
 
 .backdrop {
-  position: absolute;
+  position: fixed; /* was absolute under .modalRoot */
   inset: 0;
   background: rgba(17, 24, 39, 0.45);
+  z-index: 1000;
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   width: min(720px, calc(100vw - 24px));
@@ -79,11 +78,10 @@
   border: 1px solid var(--border, #e5e7eb);
   border-radius: 14px;
   background: var(--surface, #fff);
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.18),
-    0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.1);
 
   animation: modalPop 140ms ease-out both;
+  z-index: 1001; /* above overlay */
 }
 
 @keyframes modalPop {
