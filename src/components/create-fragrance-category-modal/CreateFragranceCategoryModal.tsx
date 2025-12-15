@@ -1,15 +1,15 @@
 import { FC, useState } from 'react';
 import { Dialog } from 'radix-ui';
 import { useCreateFragranceOilCategories } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
-import { FragranceOilCategory } from 'types/fragranceTypes';
+import { FragranceCategory } from 'types/fragranceTypes';
 
-type CreateFragranceOilCategoryModalProps = {
-  onItemsAddedSuccessfully: (items: FragranceOilCategory[]) => void;
+type CreateFragranceCategoryModalProps = {
+  onItemsAddedSuccessfully: (items: FragranceCategory[]) => void;
 };
 
-const CreateFragranceOilCategoryModal: FC<
-  CreateFragranceOilCategoryModalProps
-> = ({ onItemsAddedSuccessfully }) => {
+const CreateFragranceCategoryModal: FC<CreateFragranceCategoryModalProps> = ({
+  onItemsAddedSuccessfully,
+}) => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
@@ -44,11 +44,11 @@ const CreateFragranceOilCategoryModal: FC<
         <Dialog.Overlay className="dialogOverlay" />
         <Dialog.Content className="dialogContent">
           <Dialog.Title className="dialogTitle">
-            Create fragrance oil category
+            Create fragrance category
           </Dialog.Title>
           <Dialog.Description className="dialogDescription">
-            Create additional fragrance oil categories to assign to fragrance
-            oils
+            Create additional fragrance categories to assign to fragrance
+            oils/mixes
           </Dialog.Description>
           <div className="form">
             <div className="formGroup">
@@ -75,4 +75,4 @@ const CreateFragranceOilCategoryModal: FC<
   );
 };
 
-export default CreateFragranceOilCategoryModal;
+export default CreateFragranceCategoryModal;

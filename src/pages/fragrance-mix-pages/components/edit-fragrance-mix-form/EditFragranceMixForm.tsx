@@ -1,9 +1,14 @@
 import { FC, FormEvent, useState } from 'react';
 import { ApiError } from 'types/productTypes';
-import { FragranceMix, FragranceMixStatus } from 'types/fragranceTypes';
+import {
+  FragranceCategory,
+  FragranceMix,
+  FragranceMixStatus,
+} from 'types/fragranceTypes';
 import { useUpdateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 import EditVersionForm from '../edit-version-form/EditVersionForm';
 import styles from './EditFragranceMixForm.module.scss';
+import { CategoryPicker } from 'components';
 
 type EditFragranceMixFormProps = {
   fragranceMix: FragranceMix;
@@ -16,6 +21,9 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
 }) => {
   const [name, setName] = useState(fragranceMix.name);
   const [notes, setNotes] = useState(fragranceMix.notes);
+  const [oilCategories, setOilCategories] = useState<FragranceCategory[]>(
+    fragranceMix.categories,
+  );
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -35,6 +43,7 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
     updateFragranceMix({
       fragranceMixId: fragranceMix.fragranceMixId,
       name,
+      categoryIds: oilCategories.map(({ categoryId }) => categoryId),
       notes,
       statusId: status.fragranceMixStatusId,
     });
@@ -51,6 +60,11 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
           onChange={(e) => setName(e.target.value)}
         />
       </div>
+      <CategoryPicker
+        selectedCategories={oilCategories}
+        setSelectedCategories={setOilCategories}
+        canCreate
+      />
       <div className="formGroup">
         <label htmlFor="notes">Notes</label>
         <input

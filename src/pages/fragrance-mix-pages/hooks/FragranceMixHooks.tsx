@@ -8,6 +8,7 @@ import { ApiError } from 'types/productTypes';
 type CreateFragranceMix = {
   name: string;
   notes: string;
+  categoryIds: number[];
   oils: {
     fragranceOilId: number;
     mixRatio: number;
@@ -17,6 +18,7 @@ type CreateFragranceMix = {
 type UpdateFragranceMixProps = {
   fragranceMixId: number;
   name: string;
+  categoryIds: number[];
   notes: string;
   statusId: number;
 };

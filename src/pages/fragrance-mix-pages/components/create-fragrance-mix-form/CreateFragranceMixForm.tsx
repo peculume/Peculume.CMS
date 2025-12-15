@@ -1,10 +1,15 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from 'types/productTypes';
-import { FragranceMixVersionOil, FragranceOil } from 'types/fragranceTypes';
+import {
+  FragranceCategory,
+  FragranceMixVersionOil,
+  FragranceOil,
+} from 'types/fragranceTypes';
 import { useCreateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 import { useGetFragranceOils } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
 import CreateFragranceOilModal from 'components/create-fragrance-oil-modal/CreateFragranceOilModal';
+import { CategoryPicker } from 'components';
 import styles from './CreateFragranceMixForm.module.scss';
 
 const CreateFragranceMixForm: FC = () => {
@@ -15,6 +20,7 @@ const CreateFragranceMixForm: FC = () => {
   const [fragranceOils, setFragranceOils] = useState<FragranceMixVersionOil[]>(
     [],
   );
+  const [oilCategories, setOilCategories] = useState<FragranceCategory[]>([]);
 
   const [availableOils, setAvailableOils] = useState<FragranceOil[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -101,6 +107,7 @@ const CreateFragranceMixForm: FC = () => {
 
     createFragranceMix({
       name,
+      categoryIds: oilCategories.map(({ categoryId }) => categoryId),
       notes,
       oils: fragranceOils.map((oil) => ({
         fragranceOilId: oil.fragranceOilId,
@@ -155,6 +162,11 @@ const CreateFragranceMixForm: FC = () => {
           ))}
         </div>
       </div>
+      <CategoryPicker
+        selectedCategories={oilCategories}
+        setSelectedCategories={setOilCategories}
+        canCreate={true}
+      />
       <div className="formGroup">
         <label htmlFor="notes">Notes</label>
         <input

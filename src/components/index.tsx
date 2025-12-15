@@ -1,4 +1,6 @@
 export { default as App } from './App/App';
+export { default as CategoryPicker } from './category-picker/CategoryPicker';
+export { default as CreateFragranceCategoryModal } from './create-fragrance-category-modal/CreateFragranceCategoryModal';
 export { default as Image } from './Image/Image';
 export { default as Layout } from './Layout/Layout';
 export { default as MediaTable } from './MediaTable/MediaTable';

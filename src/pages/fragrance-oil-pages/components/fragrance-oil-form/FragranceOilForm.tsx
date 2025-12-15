@@ -2,17 +2,16 @@ import { FC, useEffect, useState } from 'react';
 import { ApiError } from 'types/productTypes';
 import {
   FragranceOil,
-  FragranceOilCategory,
+  FragranceCategory,
   FragranceOilType,
 } from 'types/fragranceTypes';
 import {
   useCreateFragranceOil,
-  useGetFragranceOilCategories,
+  useGetFragranceCategories,
   useGetFragranceOilTypes,
   useUpdateFragranceOil,
 } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
-import CreateFragranceOilCategoryModal from '../create-fragrance-oil-category-modal/CreateFragranceOilCategoryModal';
-import { SearchableComboBox } from 'components';
+import { CategoryPicker, SearchableComboBox } from 'components';
 import NotesSection from '../notes-section/NotesSection';
 
 type FragranceOilFormProps = {
@@ -44,7 +43,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
       .map(({ name }) => name)
       .join(', ') ?? '',
   );
-  const [oilCategories, setOilCategories] = useState<FragranceOilCategory[]>(
+  const [oilCategories, setOilCategories] = useState<FragranceCategory[]>(
     fragranceOil?.categories ?? [],
   );
   const [oilType, setOilType] = useState<FragranceOilType | null>(
@@ -53,12 +52,12 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
   const [notes, setNotes] = useState(fragranceOil?.notes ?? '');
 
   const [availableCategories, setAvailableCategories] = useState<
-    FragranceOilCategory[]
+    FragranceCategory[]
   >([]);
   const [errorMessage, setErrorMessage] = useState('');
 
   const { fragranceOilCategories: dataFragranceOilCategories } =
-    useGetFragranceOilCategories();
+    useGetFragranceCategories();
   const { fragranceOilTypes, isFragranceOilTypesLoading } =
     useGetFragranceOilTypes();
 
@@ -87,31 +86,25 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
   useEffect(() => {
     const filtered = dataFragranceOilCategories.filter(
       (categories) =>
-        !oilCategories.some(
-          (c) => c.fragranceOilCategoryId === categories.fragranceOilCategoryId,
-        ),
+        !oilCategories.some((c) => c.categoryId === categories.categoryId),
     );
     setAvailableCategories(filtered);
   }, [dataFragranceOilCategories]);
 
-  const handleSelectCategories = (categories: FragranceOilCategory[]) => {
+  const handleSelectCategories = (categories: FragranceCategory[]) => {
     setOilCategories((prev) => [...prev, ...categories]);
     setAvailableCategories((prev) =>
       prev.filter(
         (category) =>
-          !categories.some(
-            (c) => category.fragranceOilCategoryId === c.fragranceOilCategoryId,
-          ),
+          !categories.some((c) => category.categoryId === c.categoryId),
       ),
     );
   };
 
-  const handleRemoveCategory = (categoryToRemove: FragranceOilCategory) => {
+  const handleRemoveCategory = (categoryToRemove: FragranceCategory) => {
     setOilCategories((prev) =>
       prev.filter(
-        (category) =>
-          category.fragranceOilCategoryId !==
-          categoryToRemove.fragranceOilCategoryId,
+        (category) => category.categoryId !== categoryToRemove.categoryId,
       ),
     );
     setAvailableCategories((prev) => [...prev, categoryToRemove]);
@@ -128,7 +121,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
         fragranceOilId: fragranceOil.fragranceOilId,
         name,
         brand,
-        categoryIds: oilCategories.map((cat) => cat.fragranceOilCategoryId),
+        categoryIds: oilCategories.map((cat) => cat.categoryId),
         typeId: oilType.fragranceOilTypeId,
         notes,
         topNotes,
@@ -139,7 +132,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
       createFragranceOil({
         name,
         brand,
-        categoryIds: oilCategories.map((cat) => cat.fragranceOilCategoryId),
+        categoryIds: oilCategories.map((cat) => cat.categoryId),
         typeId: oilType.fragranceOilTypeId,
         notes,
         topNotes,
@@ -198,45 +191,11 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
           />
         </div>
       )}
-      <div className="formGroup">
-        <label htmlFor="categories">Categories</label>
-        <div className="selector">
-          <SearchableComboBox<FragranceOilCategory>
-            items={availableCategories}
-            onChange={(item) => {
-              const selectedCategory = availableCategories.find(
-                (category) =>
-                  category.fragranceOilCategoryId.toString() === item,
-              );
-              if (selectedCategory) {
-                handleSelectCategories([selectedCategory]);
-              }
-            }}
-            getOptionLabel={(e) => e.name}
-            getOptionValue={(e) => e.fragranceOilCategoryId.toString()}
-            placeholder="Select a category..."
-            label="Category"
-            value={null}
-          />
-          <CreateFragranceOilCategoryModal
-            onItemsAddedSuccessfully={handleSelectCategories}
-          />
-        </div>
-        <div className="selected">
-          {oilCategories.map((category) => (
-            <div key={category.fragranceOilCategoryId} className="item">
-              {category.name}
-              <button
-                type="button"
-                className="remove-button"
-                onClick={() => handleRemoveCategory(category)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+      <CategoryPicker
+        selectedCategories={oilCategories}
+        setSelectedCategories={setOilCategories}
+        canCreate={true}
+      />
       <div className="formGroup">
         <label htmlFor="notes">Notes</label>
         <input

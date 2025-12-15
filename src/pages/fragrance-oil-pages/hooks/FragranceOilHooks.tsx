@@ -4,7 +4,7 @@ import { mutationProps } from 'hooks';
 import { useAuth } from 'providers/AuthProvider';
 import {
   FragranceOil,
-  FragranceOilCategory,
+  FragranceCategory,
   FragranceOilType,
 } from 'types/fragranceTypes';
 import { ApiError } from 'types/productTypes';
@@ -12,9 +12,9 @@ import { ApiError } from 'types/productTypes';
 type CreateFragranceOil = {
   name: string;
   brand: string;
-  topNotesIds: number[];
-  heartNotesIds: number[];
-  baseNotesIds: number[];
+  topNotes: string;
+  heartNotes: string;
+  baseNotes: string;
   categoryIds: number[];
   typeId: number;
   notes: string;
@@ -162,7 +162,7 @@ const useGetFragranceOils = () => {
 const useCreateFragranceOilCategories = ({
   onSuccess,
   onError,
-}: mutationProps<FragranceOilCategory[]>) => {
+}: mutationProps<FragranceCategory[]>) => {
   const queryClient = useQueryClient();
   const { authData } = useAuth();
 
@@ -192,11 +192,11 @@ const useCreateFragranceOilCategories = ({
         throw error;
       }
 
-      return (await response.json()) as FragranceOilCategory[];
+      return (await response.json()) as FragranceCategory[];
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['getFragranceOilCategories'],
+        queryKey: ['getFragranceCategories'],
       });
       onSuccess?.(data);
     },
@@ -211,27 +211,24 @@ const useCreateFragranceOilCategories = ({
   };
 };
 
-const useGetFragranceOilCategories = () => {
+const useGetFragranceCategories = () => {
   const {
     data = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['getFragranceOilCategories'],
+    queryKey: ['getFragranceCategories'],
     queryFn: async () => {
-      const response = await fetch(
-        `${API_BASE_URL}/fragrance-oils/categories`,
-        {
-          method: 'GET',
-          headers: {
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          },
+      const response = await fetch(`${API_BASE_URL}/fragrance/categories`, {
+        method: 'GET',
+        headers: {
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
         },
-      );
+      });
       if (!response.ok) {
         throw `Error fetching fragrance oil categories: ${response.status}`;
       }
-      const resp = (await response.json()) as FragranceOilCategory[];
+      const resp = (await response.json()) as FragranceCategory[];
 
       return resp;
     },
@@ -279,6 +276,6 @@ export {
   useUpdateFragranceOil,
   useCreateFragranceOilCategories,
   useGetFragranceOils,
-  useGetFragranceOilCategories,
+  useGetFragranceCategories,
   useGetFragranceOilTypes,
 };
