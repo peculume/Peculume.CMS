@@ -174,19 +174,16 @@ const useCreateFragranceOilCategories = ({
           message: 'Not authenticated',
         };
       }
-      const response = await fetch(
-        `${API_BASE_URL}/fragrance-oils/categories`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-            Authorization: `bearer ${authData.token}`,
-            adminUserId: authData.adminUser.adminUserId.toString(),
-          },
-          body: JSON.stringify(props),
+      const response = await fetch(`${API_BASE_URL}/fragrance/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
+          Authorization: `bearer ${authData.token}`,
+          adminUserId: authData.adminUser.adminUserId.toString(),
         },
-      );
+        body: JSON.stringify(props),
+      });
 
       if (!response.ok) {
         const error = (await response.json()) as ApiError;
