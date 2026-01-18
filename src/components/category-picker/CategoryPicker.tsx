@@ -88,7 +88,7 @@ const CategoryPicker: FC<CategoryPickerProps> = ({
               className="remove-button"
               onClick={() => handleRemoveCategory(category)}
             >
-              ×
+              x
             </button>
           </div>
         ))}

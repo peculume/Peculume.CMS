@@ -8,6 +8,7 @@ import {
 import { useGetFragranceOils } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
 import styles from './EditVersionForm.module.scss';
 import { useUpdateFragranceMixVersion } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
+import FragranceOilPicker from '../fragrance-oil-picker/FragranceOilPicker';
 
 type EditVersionFormProps = {
   fragranceMixId: number;
@@ -116,51 +117,11 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
       </div>
 
       <div className={styles.oilsSection}>
-        <p className={styles.oilsHeader}>Fragrance oils</p>
-
-        <div className={styles.oilList}>
-          {fragranceOils.map((oil) => (
-            <div key={oil.fragranceOilId} className={styles.oilLine}>
-              <span className={styles.oilName}>{oil.name}</span>
-              <input
-                className={styles.oilInput}
-                type="number"
-                value={oil.mixRatio}
-                onChange={(e) =>
-                  handleOilRationChange(oil.fragranceOilId, e.target.value)
-                }
-              />
-              <button
-                type="button"
-                className={styles.removeOilButton}
-                onClick={() => handleRemoveItem(oil)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <div className={styles.addOilRow}>
-          <label
-            className={styles.addOilLabel}
-            htmlFor={`add-oil-${version.fragranceMixVersionId}`}
-          >
-            Add oil
-          </label>
-          <select
-            id={`add-oil-${version.fragranceMixVersionId}`}
-            className={styles.addOilSelect}
-            onChange={handleOilSelect}
-          >
-            <option value="">Select an oil...</option>
-            {availableOils.map((item) => (
-              <option key={item.fragranceOilId} value={item.fragranceOilId}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FragranceOilPicker
+          selectedOils={fragranceOils}
+          setSelectedOils={setFragranceOils}
+          canCreate={false}
+        />
       </div>
 
       <button

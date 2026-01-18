@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { ApiError } from 'types/productTypes';
 import {
   FragranceOil,
@@ -7,7 +7,6 @@ import {
 } from 'types/fragranceTypes';
 import {
   useCreateFragranceOil,
-  useGetFragranceCategories,
   useGetFragranceOilTypes,
   useUpdateFragranceOil,
 } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
@@ -50,14 +49,8 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
     fragranceOil?.type ?? null,
   );
   const [notes, setNotes] = useState(fragranceOil?.notes ?? '');
-
-  const [availableCategories, setAvailableCategories] = useState<
-    FragranceCategory[]
-  >([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { fragranceOilCategories: dataFragranceOilCategories } =
-    useGetFragranceCategories();
   const { fragranceOilTypes, isFragranceOilTypesLoading } =
     useGetFragranceOilTypes();
 
@@ -75,40 +68,13 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
 
   const { updateFragranceOil, updateFragranceOilPending } =
     useUpdateFragranceOil({
-      onSuccess: (product) => {
+      onSuccess: () => {
         setErrorMessage('');
       },
       onError: (error: ApiError) => {
         setErrorMessage(error.message);
       },
     });
-
-  useEffect(() => {
-    const filtered = dataFragranceOilCategories.filter(
-      (categories) =>
-        !oilCategories.some((c) => c.categoryId === categories.categoryId),
-    );
-    setAvailableCategories(filtered);
-  }, [dataFragranceOilCategories]);
-
-  const handleSelectCategories = (categories: FragranceCategory[]) => {
-    setOilCategories((prev) => [...prev, ...categories]);
-    setAvailableCategories((prev) =>
-      prev.filter(
-        (category) =>
-          !categories.some((c) => category.categoryId === c.categoryId),
-      ),
-    );
-  };
-
-  const handleRemoveCategory = (categoryToRemove: FragranceCategory) => {
-    setOilCategories((prev) =>
-      prev.filter(
-        (category) => category.categoryId !== categoryToRemove.categoryId,
-      ),
-    );
-    setAvailableCategories((prev) => [...prev, categoryToRemove]);
-  };
 
   const handleOnSubmit = () => {
     if (!oilType) {
