@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
-import { mutationProps } from "hooks";
-import { useAuth } from "providers/AuthProvider";
-import { ApiError, Media, Product, ProductType, Tag } from "types/productTypes";
+import { useNavigate } from 'react-router';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
+import { mutationProps } from 'hooks';
+import { useAuth } from 'providers/AuthProvider';
+import { ApiError, Media, Product, ProductType, Tag } from 'types/productTypes';
 
 type CreateProductProps = {
   name: string;
@@ -36,14 +36,14 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
     }: CreateProductProps) => {
       if (!authData) {
         throw {
-          message: "Not authenticated",
+          message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/products/`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'Content-Type': 'application/json',
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
           Authorization: `bearer ${authData.token}`,
           adminUserId: authData.adminUser.adminUserId.toString(),
         },
@@ -66,8 +66,8 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       return (await response.json()) as Product;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["getProducts"] });
-      navigate("/products");
+      queryClient.invalidateQueries({ queryKey: ['getProducts'] });
+      navigate('/products');
       onSuccess?.(data);
     },
     onError: (error: ApiError) => {
@@ -98,14 +98,14 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
     }: UpdateProductProps) => {
       if (!authData) {
         throw {
-          message: "Not authenticated",
+          message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'Content-Type': 'application/json',
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
           Authorization: `bearer ${authData.token}`,
           adminUserId: authData.adminUser.adminUserId.toString(),
         },
@@ -130,9 +130,9 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ["getProduct", data.productId.toString()],
+        queryKey: ['getProduct', data.productId.toString()],
       });
-      queryClient.invalidateQueries({ queryKey: ["getProducts"] });
+      queryClient.invalidateQueries({ queryKey: ['getProducts'] });
 
       onSuccess?.(data);
     },
@@ -156,14 +156,14 @@ const useDeleteProduct = ({ onSuccess, onError }: mutationProps<undefined>) => {
     mutationFn: async ({ productId }: { productId: number }) => {
       if (!authData) {
         throw {
-          message: "Not authenticated",
+          message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'Content-Type': 'application/json',
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
           Authorization: `bearer ${authData.token}`,
           adminUserId: authData.adminUser.adminUserId.toString(),
         },
@@ -175,8 +175,8 @@ const useDeleteProduct = ({ onSuccess, onError }: mutationProps<undefined>) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getProducts"] });
-      navigate("/products");
+      queryClient.invalidateQueries({ queryKey: ['getProducts'] });
+      navigate('/products');
     },
     onError: (error: ApiError) => {
       onError?.(error);
@@ -189,17 +189,17 @@ const useDeleteProduct = ({ onSuccess, onError }: mutationProps<undefined>) => {
 
 const useGetProducts = (type?: string) => {
   const { data = [] } = useQuery({
-    queryKey: ["getProducts"],
+    queryKey: ['getProducts'],
     queryFn: async () => {
       const url = new URL(`${API_BASE_URL}/products/`);
       if (type) {
-        url.searchParams.set("type", type);
+        url.searchParams.set('type', type);
       }
 
       const response = await fetch(url.toString(), {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
         },
       });
       if (!response.ok) {

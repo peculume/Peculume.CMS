@@ -6,9 +6,9 @@ import {
   FragranceMixStatus,
 } from 'types/fragranceTypes';
 import { useUpdateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
+import { CategoryPicker } from 'components';
 import EditVersionForm from '../edit-version-form/EditVersionForm';
 import styles from './EditFragranceMixForm.module.scss';
-import { CategoryPicker } from 'components';
 
 type EditFragranceMixFormProps = {
   fragranceMix: FragranceMix;

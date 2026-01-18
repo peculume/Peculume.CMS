@@ -4,7 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
 import { FragranceMix } from 'types/fragranceTypes';
 import { useGetAllFragranceMixStatuses } from 'hooks/config-hooks/ConfigHooks';
-import EditFragranceMixForm from './components/edit-fragrance-mix-form/EditFragranceMixForm';
+import { AreYouSureModal } from 'components';
+import { useDeleteFragranceMix } from './hooks/FragranceMixHooks';
+import { EditFragranceMixForm } from './components';
 
 const FragranceMixPage = () => {
   const { fragranceMixId } = useParams();
@@ -35,6 +37,8 @@ const FragranceMixPage = () => {
   const { fragranceMixStatuses, isFragranceMixStatusesLoading } =
     useGetAllFragranceMixStatuses();
 
+  const { deleteFragranceMix } = useDeleteFragranceMix({});
+
   const [status, setStatus] = useState(fragranceMix?.status);
 
   if (!fragranceMix || !status) {
@@ -53,6 +57,7 @@ const FragranceMixPage = () => {
         <h2 className="title">{fragranceMix.name}</h2>
         {!isFragranceMixStatusesLoading && status && (
           <select
+            id="fragranceMixStatus"
             value={status.fragranceMixStatusId}
             onChange={(e) => {
               const selectedStatus = fragranceMixStatuses.find(
@@ -74,6 +79,17 @@ const FragranceMixPage = () => {
             ))}
           </select>
         )}
+        <button className="danger">
+          <AreYouSureModal
+            text="Delete"
+            description="Are you sure you want to delete this fragrance mix?"
+            onConfirm={() => {
+              deleteFragranceMix({
+                fragranceMixId: fragranceMix.fragranceMixId,
+              });
+            }}
+          />
+        </button>
       </div>
       <EditFragranceMixForm fragranceMix={fragranceMix} status={status} />
     </div>

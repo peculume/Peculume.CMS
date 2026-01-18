@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
 import { mutationProps } from 'hooks';
 import { useAuth } from 'providers/AuthProvider';
+import { useNavigate } from 'react-router';
 import { FragranceMix, FragranceMixVersion } from 'types/fragranceTypes';
 import { ApiError } from 'types/productTypes';
 
@@ -286,10 +287,59 @@ const useUpdateFragranceMixVersion = ({
   };
 };
 
+const useDeleteFragranceMix = ({
+  onSuccess,
+  onError,
+}: mutationProps<undefined>) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { authData } = useAuth();
+
+  const { mutate } = useMutation({
+    mutationFn: async ({ fragranceMixId }: { fragranceMixId: number }) => {
+      if (!authData) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+      const response = await fetch(
+        `${API_BASE_URL}/fragrance-mixes/${fragranceMixId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
+            Authorization: `bearer ${authData.token}`,
+            adminUserId: authData.adminUser.adminUserId.toString(),
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      return undefined;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
+      navigate('/fragrance-mixes');
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    deleteFragranceMix: mutate,
+  };
+};
+
 export {
   useCreateFragranceMix,
   useUpdateFragranceMix,
   useUpdateFragranceMixStatus,
   useUpdateFragranceMixVersion,
   useGetFragranceMixes,
+  useDeleteFragranceMix,
 };

@@ -198,6 +198,10 @@ a {
     align-items: center;
     margin-bottom: 2rem;
     gap: 1rem;
+
+    .danger {
+      margin-left: auto;
+    }
   }
 
   .backButton {
