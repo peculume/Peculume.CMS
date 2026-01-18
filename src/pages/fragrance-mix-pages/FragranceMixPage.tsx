@@ -29,6 +29,7 @@ const FragranceMixPage = () => {
       setStatus(resp.status);
       return resp;
     },
+    staleTime: 1000 * 60 * 5,
   });
 
   const { fragranceMixStatuses, isFragranceMixStatusesLoading } =
