@@ -12,6 +12,7 @@ import { ApiError } from 'types/productTypes';
 type CreateFragranceOil = {
   name: string;
   brand: string;
+  shopUrl: string;
   topNotes: string;
   heartNotes: string;
   baseNotes: string;

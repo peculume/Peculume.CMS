@@ -2,6 +2,7 @@ export type FragranceOil = {
   fragranceOilId: number;
   name: string;
   brand: string;
+  shopUrl: string;
   noteAssignments: FragranceOilNote[];
   categories: FragranceCategory[];
   type: FragranceOilType;

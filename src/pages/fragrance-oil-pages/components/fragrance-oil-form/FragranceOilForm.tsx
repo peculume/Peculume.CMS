@@ -24,6 +24,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
 }) => {
   const [name, setName] = useState(fragranceOil?.name ?? '');
   const [brand, setBrand] = useState(fragranceOil?.brand ?? '');
+  const [shopUrl, setShopUrl] = useState(fragranceOil?.shopUrl ?? '');
   const [topNotes, setTopNotes] = useState(
     fragranceOil?.noteAssignments
       .filter((note) => note.layer === 'Top')
@@ -87,6 +88,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
         fragranceOilId: fragranceOil.fragranceOilId,
         name,
         brand,
+        shopUrl,
         categoryIds: oilCategories.map((cat) => cat.categoryId),
         typeId: oilType.fragranceOilTypeId,
         notes,
@@ -98,6 +100,7 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
       createFragranceOil({
         name,
         brand,
+        shopUrl,
         categoryIds: oilCategories.map((cat) => cat.categoryId),
         typeId: oilType.fragranceOilTypeId,
         notes,
@@ -126,6 +129,15 @@ const FragranceOilForm: FC<FragranceOilFormProps> = ({
           type="text"
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
+        />
+      </div>
+      <div className="formGroup">
+        <label htmlFor="shopUrl">Shop URL</label>
+        <input
+          id="shopUrl"
+          type="text"
+          value={shopUrl}
+          onChange={(e) => setShopUrl(e.target.value)}
         />
       </div>
       <NotesSection
