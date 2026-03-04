@@ -11,6 +11,7 @@ import {
   HomePage,
   KanbanPage,
   LoginPage,
+  LorePage,
   MediaItemPage,
   MediaPage,
   ProductPage,
@@ -50,6 +51,7 @@ const App = () => {
             <Route path="/products/create" element={<CreateProductPage />} />
             <Route path="/media" element={<MediaPage />} />
             <Route path="/media/:mediaId" element={<MediaItemPage />} />
+            <Route path="/lore" element={<LorePage />} />
           </Routes>
         </Layout>
       </AuthContextProvider>
