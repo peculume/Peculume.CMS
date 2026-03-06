@@ -1,58 +1,61 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
-import { useAuth } from "providers/AuthProvider";
-import { ApiError, Tag } from "types/productTypes";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
+import { useAuth } from 'providers/AuthProvider';
+import { ApiError, Tag } from 'types/productTypes';
 
 export const useGetTags = () => {
-  const { data = [], isLoading, isError, } = useQuery({
-    queryKey: ["getTags"],
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['getTags'],
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/tags/`, {
         method: 'GET',
         headers: {
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
         },
       });
       if (!response.ok) {
         throw `Error fetching tags: ${response.status}`;
       }
-      const resp = await response.json() as Tag[];
+      const resp = (await response.json()) as Tag[];
 
       return resp;
     },
     staleTime: 1000 * 60 * 5,
-  })
+  });
 
   return {
     tags: data,
     isTagsLoading: isLoading,
     isTagsError: isError,
-  }
-}
+  };
+};
 
 type useCreateTagProps = {
   onSuccess?: () => void;
   onError?: (error: ApiError) => void;
-}
+};
 
 export const useCreateTag = ({ onSuccess, onError }: useCreateTagProps) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: async (tagName: string) => {
-      if (!authData) {
+      if (!token) {
         throw {
-          message: "Not authenticated",
+          message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/tags/`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify({
           tagName,
@@ -60,22 +63,22 @@ export const useCreateTag = ({ onSuccess, onError }: useCreateTagProps) => {
       });
 
       if (!response.ok) {
-        const error = await response.json() as ApiError;
+        const error = (await response.json()) as ApiError;
         throw error;
       }
 
-      return await response.json() as Tag;
+      return (await response.json()) as Tag;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getTags"] })
+      queryClient.invalidateQueries({ queryKey: ['getTags'] });
       onSuccess?.();
     },
     onError: (error: ApiError) => {
       onError?.(error);
-    }
+    },
   });
 
   return {
     createTag: mutate,
-  }
-}
+  };
+};

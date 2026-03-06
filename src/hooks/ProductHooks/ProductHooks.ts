@@ -22,7 +22,7 @@ type UpdateProductProps = CreateProductProps & {
 const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
@@ -34,18 +34,17 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       tags,
       price,
     }: CreateProductProps) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/products/`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify({
           name,
@@ -83,7 +82,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
 
 const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
@@ -96,18 +95,17 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       tags,
       price,
     }: UpdateProductProps) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify({
           productId,
@@ -150,22 +148,21 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
 const useDeleteProduct = ({ onSuccess, onError }: mutationProps<undefined>) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: async ({ productId }: { productId: number }) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
       });
 

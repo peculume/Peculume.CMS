@@ -33,22 +33,21 @@ const useCreateFragranceOil = ({
   onError,
 }: mutationProps<FragranceOil>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: CreateFragranceOil) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/fragrance-oils/`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify(props),
       });
@@ -80,11 +79,11 @@ const useUpdateFragranceOil = ({
   onError,
 }: mutationProps<FragranceOil>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: UpdateFragranceOilProps) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
@@ -93,11 +92,10 @@ const useUpdateFragranceOil = ({
         `${API_BASE_URL}/fragrance-oils/${props.fragranceOilId}`,
         {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-            Authorization: `bearer ${authData.token}`,
-            adminUserId: authData.adminUser.adminUserId.toString(),
+            Authorization: `bearer ${token}`,
           },
           body: JSON.stringify(props),
         },
@@ -165,22 +163,21 @@ const useCreateFragranceOilCategories = ({
   onError,
 }: mutationProps<FragranceCategory[]>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: CreateFragranceOilCateories) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/fragrance/categories`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify(props),
       });

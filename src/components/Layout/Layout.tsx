@@ -1,6 +1,7 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from 'providers/AuthProvider';
+import { FullPageLoader } from 'components';
 import styles from './Layout.module.scss';
 
 type LayoutProps = {
@@ -9,12 +10,25 @@ type LayoutProps = {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { authData, setJwt } = useAuth();
+  const { isAuthInitialising, user, logout } = useAuth();
 
-  const handleLogout = () => {
-    setJwt(null);
-    navigate('/login');
-  };
+  useEffect(() => {
+    if (isAuthInitialising) {
+      return;
+    }
+
+    if (!user) {
+      navigate('/login');
+    }
+  });
+
+  if (isAuthInitialising || !user) {
+    return <FullPageLoader />;
+  }
+
+  if (!user.verified) {
+    return <p>Account is not verified</p>;
+  }
 
   return (
     <div className={styles.layoutContainer}>
@@ -22,70 +36,56 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         <NavLink to="/">
           <h1>Peculume CMS</h1>
         </NavLink>
-        {authData && <button onClick={handleLogout}>Logout</button>}
+        <button onClick={logout}>Logout</button>
       </header>
       <div className={styles.layoutBodyContainer}>
-        {!!authData && authData.adminUser.verified && (
-          <div className={styles.layoutSidebarContainer}>
-            <div className={styles.layoutSidebarSection}>
-              <h2>Shop</h2>
-              <NavLink
-                to={'/products'}
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ''
-                }
-              >
-                Products
-              </NavLink>
-              <NavLink
-                to={'/media'}
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ''
-                }
-              >
-                Media
-              </NavLink>
-            </div>
-            <div className={styles.layoutSidebarSection}>
-              <h2>Lab</h2>
-              <NavLink
-                to={'/kanban'}
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ''
-                }
-              >
-                Kanban
-              </NavLink>
-              <NavLink
-                to={'/fragrance-oils'}
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ''
-                }
-              >
-                Fragrance oils
-              </NavLink>
-              <NavLink
-                to={'/fragrance-mixes'}
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ''
-                }
-              >
-                Fragrance mixes
-              </NavLink>
-            </div>
-            <div className={styles.layoutSidebarSection}>
-              <h2>Content</h2>
-              <NavLink
-                to={'/lore'}
-                className={({ isActive }) =>
-                  isActive ? styles.activeLink : ''
-                }
-              >
-                Lore
-              </NavLink>
-            </div>
+        <div className={styles.layoutSidebarContainer}>
+          <div className={styles.layoutSidebarSection}>
+            <h2>Shop</h2>
+            <NavLink
+              to={'/products'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Products
+            </NavLink>
+            <NavLink
+              to={'/media'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Media
+            </NavLink>
           </div>
-        )}
+          <div className={styles.layoutSidebarSection}>
+            <h2>Lab</h2>
+            <NavLink
+              to={'/kanban'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Kanban
+            </NavLink>
+            <NavLink
+              to={'/fragrance-oils'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Fragrance oils
+            </NavLink>
+            <NavLink
+              to={'/fragrance-mixes'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Fragrance mixes
+            </NavLink>
+          </div>
+          <div className={styles.layoutSidebarSection}>
+            <h2>Content</h2>
+            <NavLink
+              to={'/lore'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Lore
+            </NavLink>
+          </div>
+        </div>
         <div className={styles.layoutPageContainer}>{children}</div>
       </div>
     </div>

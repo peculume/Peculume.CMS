@@ -1,12 +1,14 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useVerifyAdminUser } from "hooks/AuthHooks/AuthHooks";
-import { createContext, useContext, useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router";
-import { AuthResponse } from "types/productTypes";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { API_BASE_URL } from 'api/config';
+import { AdminUser, AuthResponse } from 'types/productTypes';
 
 interface AuthContextType {
-  setJwt: (token: string | null) => void;
-  authData?: AuthResponse;
+  token: string | null;
+  user: AdminUser | null;
+  isAuthInitialising: boolean;
+  isAuthenticated: boolean;
+  loginFromResponse: (data: AuthResponse) => void;
+  logout: () => void;
 }
 interface AuthContextProviderProps {
   children: React.ReactNode;
@@ -14,36 +16,80 @@ interface AuthContextProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
-  const location = useLocation();
-  const queryClient = useQueryClient();
+const TOKEN_KEY = 'auth_token';
+const AUTH_KEY = 'auth';
 
-  const [jwt, setJwt] = useState<string | null>(() => localStorage.getItem("jwt"));
-  const { authData, isAuthDataLoading } = useVerifyAdminUser({ jwt, setJwt });
+const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
+  children,
+}) => {
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
+  const [isAuthInitialising, setIsAuthInitialising] = useState(true);
+
+  const loginFromResponse = (data: AuthResponse) => {
+    setToken(data.token);
+    setUser(data.adminUser);
+    localStorage.setItem(TOKEN_KEY, data.token);
+    localStorage.setItem(AUTH_KEY, JSON.stringify(data.adminUser));
+  };
+
+  const logout = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+    } finally {
+      setToken(null);
+      setUser(null);
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(AUTH_KEY);
+    }
+  };
 
   useEffect(() => {
-    if (jwt) {
-      localStorage.setItem("jwt", jwt);
-    }
-    else {
-      localStorage.removeItem("jwt");
-    }
-    queryClient.removeQueries({ queryKey: ["verifyAdminUser"] });
-  }, [jwt])
+    const init = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        });
 
-  if (location.pathname !== "/login" && !authData && !isAuthDataLoading) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
+        if (!res.ok) {
+          // no valid refresh token → logged out
+          setToken(null);
+          setUser(null);
+          localStorage.removeItem(TOKEN_KEY);
+          localStorage.removeItem(AUTH_KEY);
+          setIsAuthInitialising(false);
+          return;
+        }
 
-  if ((location.pathname !== "/" && location.pathname !== "/login") && !authData?.adminUser.verified) {
-    return <Navigate to="/" state={{ from: location }} replace />;
-  }
+        const data = (await res.json()) as AuthResponse;
+        loginFromResponse(data);
+      } catch {
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(AUTH_KEY);
+      } finally {
+        setIsAuthInitialising(false);
+      }
+    };
+
+    void init();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        setJwt,
-        authData,
+        token,
+        user,
+        isAuthInitialising,
+        isAuthenticated: !!token,
+        loginFromResponse,
+        logout,
       }}
     >
       {children}

@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { API_BASE_URL, BUILD_TIME_API_KEY } from "api/config";
-import { mutationProps } from "hooks";
-import { useAuth } from "providers/AuthProvider";
-import { ApiError, ProductType } from "types/productTypes";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
+import { mutationProps } from 'hooks';
+import { useAuth } from 'providers/AuthProvider';
+import { ApiError, ProductType } from 'types/productTypes';
 
 type CreateProductTypeProps = {
   name: string;
@@ -15,12 +15,12 @@ const useGetProductTypes = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["getProductTypes"],
+    queryKey: ['getProductTypes'],
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/product-types/`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
         },
       });
       if (!response.ok) {
@@ -40,27 +40,26 @@ const useGetProductTypes = () => {
   };
 };
 
-const useCreateProductType = ({ onSuccess, onError }: mutationProps<ProductType>) => {
+const useCreateProductType = ({
+  onSuccess,
+  onError,
+}: mutationProps<ProductType>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async ({
-      name,
-      slug,
-    }: CreateProductTypeProps) => {
-      if (!authData) {
+    mutationFn: async ({ name, slug }: CreateProductTypeProps) => {
+      if (!token) {
         throw {
-          message: "Not authenticated",
+          message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/product-types/`, {
-        method: "POST",
+        method: 'POST',
+        credentials: 'include',
         headers: {
-          "Content-Type": "application/json",
-          "X-Build-Time-Api-Key": BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify({
           name,
@@ -76,7 +75,7 @@ const useCreateProductType = ({ onSuccess, onError }: mutationProps<ProductType>
       return (await response.json()) as ProductType;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["getProductTypes"] });
+      queryClient.invalidateQueries({ queryKey: ['getProductTypes'] });
       onSuccess?.(data);
     },
     onError: (error: ApiError) => {

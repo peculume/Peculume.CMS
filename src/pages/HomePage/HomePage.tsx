@@ -1,11 +1,13 @@
-import { useAuth } from "providers/AuthProvider";
+import { useAuth } from 'providers/AuthProvider';
 
 const HomePage = () => {
-  const { authData } = useAuth();
+  const { user } = useAuth();
   return (
     <div>
-      {!authData?.adminUser.verified && (
-        <p style={{ fontWeight: "bold" }}>Account requires verification to proceed</p>
+      {!user?.verified && (
+        <p style={{ fontWeight: 'bold' }}>
+          Account requires verification to proceed
+        </p>
       )}
     </div>
   );

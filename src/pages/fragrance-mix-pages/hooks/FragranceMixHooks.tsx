@@ -48,22 +48,21 @@ const useCreateFragranceMix = ({
   onError,
 }: mutationProps<FragranceMix>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: CreateFragranceMix) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
       }
       const response = await fetch(`${API_BASE_URL}/fragrance-mixes/`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-          Authorization: `bearer ${authData.token}`,
-          adminUserId: authData.adminUser.adminUserId.toString(),
+          Authorization: `bearer ${token}`,
         },
         body: JSON.stringify(props),
       });
@@ -95,11 +94,11 @@ const useUpdateFragranceMix = ({
   onError,
 }: mutationProps<FragranceMix>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: UpdateFragranceMixProps) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
@@ -108,11 +107,10 @@ const useUpdateFragranceMix = ({
         `${API_BASE_URL}/fragrance-mixes/${props.fragranceMixId}`,
         {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-            Authorization: `bearer ${authData.token}`,
-            adminUserId: authData.adminUser.adminUserId.toString(),
+            Authorization: `bearer ${token}`,
           },
           body: JSON.stringify(props),
         },
@@ -149,11 +147,11 @@ const useUpdateFragranceMixStatus = ({
   onError,
 }: mutationProps<FragranceMix>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: UpdateFragranceMixStatusProps) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
@@ -162,11 +160,10 @@ const useUpdateFragranceMixStatus = ({
         `${API_BASE_URL}/fragrance-mixes/${props.fragranceMixId}/status`,
         {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-            Authorization: `bearer ${authData.token}`,
-            adminUserId: authData.adminUser.adminUserId.toString(),
+            Authorization: `bearer ${token}`,
           },
           body: JSON.stringify(props),
         },
@@ -234,11 +231,11 @@ const useUpdateFragranceMixVersion = ({
   onError,
 }: mutationProps<FragranceMixVersionWithFragranceMixId>) => {
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: UpdateFragranceMixVerionProps) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
@@ -247,11 +244,10 @@ const useUpdateFragranceMixVersion = ({
         `${API_BASE_URL}/fragrance-mixes/${props.fragranceMixId}/version/${props.fragranceMixVersionId}`,
         {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-            Authorization: `bearer ${authData.token}`,
-            adminUserId: authData.adminUser.adminUserId.toString(),
+            Authorization: `bearer ${token}`,
           },
           body: JSON.stringify(props),
         },
@@ -293,11 +289,11 @@ const useDeleteFragranceMix = ({
 }: mutationProps<undefined>) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { authData } = useAuth();
+  const { token } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: async ({ fragranceMixId }: { fragranceMixId: number }) => {
-      if (!authData) {
+      if (!token) {
         throw {
           message: 'Not authenticated',
         };
@@ -306,10 +302,9 @@ const useDeleteFragranceMix = ({
         `${API_BASE_URL}/fragrance-mixes/${fragranceMixId}`,
         {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
-            'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
-            Authorization: `bearer ${authData.token}`,
-            adminUserId: authData.adminUser.adminUserId.toString(),
+            Authorization: `bearer ${token}`,
           },
         },
       );
