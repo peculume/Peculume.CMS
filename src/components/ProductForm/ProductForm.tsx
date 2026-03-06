@@ -9,6 +9,7 @@ import { useGetProductTypes } from "hooks/ProductTypeHooks/ProductTypeHooks";
 import { Image } from "components";
 import styles from "./ProductForm.module.scss";
 import CreateProductTypeModal from "modals/CreateProductTypeModal/CreateProductTypeModal";
+import SelectMediaModal from "modals/SelectMediaModal/SelectMediaModal";
 
 type ProductFormTypes = {
   product?: Product;
@@ -168,7 +169,10 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           <div className={styles.imageUploader} >
             <div>
               <input type="button" value="Upload new" onClick={() => fileInputRef.current?.click()} />
-              <input type="button" value="Select existing" onClick={() => alert("todo")} />
+              <SelectMediaModal
+                selectedMedia={media}
+                onConfirm={(newMedia) => setMedia((prev) => [...prev, ...newMedia])}
+              />
             </div>
             <p className={styles.mediaDescriptionText}>Accepts images and 3D models</p>
           </div>
