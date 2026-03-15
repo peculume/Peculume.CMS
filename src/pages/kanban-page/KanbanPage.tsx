@@ -10,6 +10,7 @@ import {
   useGetFragranceMixes,
   useUpdateFragranceMixStatus,
 } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
+import { CreateKanbanStatusModal } from 'components';
 import styles from './KanbanPage.module.scss';
 
 const KanbanPage = () => {
@@ -85,6 +86,9 @@ const KanbanPage = () => {
     <div>
       <div className="actions-container">
         <h2>Kanban</h2>
+        <div>
+          <CreateKanbanStatusModal />
+        </div>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className={styles.kanbanContainer}>

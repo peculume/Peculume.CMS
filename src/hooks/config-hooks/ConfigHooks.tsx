@@ -1,6 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_BASE_URL, BUILD_TIME_API_KEY } from 'api/config';
+import { mutationProps } from 'hooks';
+import { useAuth } from 'providers/AuthProvider';
 import { FragranceMixStatus } from 'types/fragranceTypes';
+import { ApiError } from 'types/productTypes';
+
+export type CreateFragranceMixStatus = {
+  name: string;
+  colourHex: string;
+  order: number;
+};
 
 const useGetAllFragranceMixStatuses = () => {
   const { data = [], isLoading } = useQuery({
@@ -29,4 +38,63 @@ const useGetAllFragranceMixStatuses = () => {
   };
 };
 
-export { useGetAllFragranceMixStatuses };
+const useCreateFragranceMixStatus = ({
+  onSuccess,
+  onError,
+}: mutationProps<FragranceMixStatus>) => {
+  const queryClient = useQueryClient();
+  const { token } = useAuth();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async ({
+      name,
+      colourHex,
+      order,
+    }: CreateFragranceMixStatus) => {
+      if (!token) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+      const response = await fetch(
+        `${API_BASE_URL}/config/fragrance-mix-statuses/`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            colourHex,
+            order,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      return (await response.json()) as FragranceMixStatus;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['getAllFragranceMixStatuses'],
+      });
+      onSuccess?.(data);
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    createFragranceMixStatus: mutate,
+    createFragranceMixStatusPending: isPending,
+  };
+};
+
+export { useGetAllFragranceMixStatuses, useCreateFragranceMixStatus };

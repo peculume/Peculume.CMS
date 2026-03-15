@@ -75,6 +75,12 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             >
               Fragrance mixes
             </NavLink>
+            <NavLink
+              to={'/prototypes'}
+              className={({ isActive }) => (isActive ? styles.activeLink : '')}
+            >
+              Prototypes
+            </NavLink>
           </div>
           <div className={styles.layoutSidebarSection}>
             <h2>Content</h2>

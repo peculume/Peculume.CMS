@@ -2,6 +2,7 @@ export { default as App } from './App/App';
 export { default as AreYouSureModal } from './are-you-sure-modal/AreYouSureModal';
 export { default as CategoryPicker } from './category-picker/CategoryPicker';
 export { default as CreateFragranceCategoryModal } from './create-fragrance-category-modal/CreateFragranceCategoryModal';
+export { default as CreateKanbanStatusModal } from './create-fragrance-mix-status-modal/CreateFragranceMixStatusModal';
 export { default as FullPageLoader } from './full-page-loader/FullPageLoader';
 export { default as Image } from './Image/Image';
 export { default as Layout } from './Layout/Layout';
