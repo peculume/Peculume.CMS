@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router';
+import AllLoreTable from './components/AllLoreTable';
 
-const LorePage = () => {
+const AllLorePage = () => {
   const navigate = useNavigate();
+
   return (
     <div>
       <div className="actions-container">
@@ -15,8 +17,9 @@ const LorePage = () => {
           </button>
         </div>
       </div>
+      <AllLoreTable />
     </div>
   );
 };
 
-export default LorePage;
+export default AllLorePage;

@@ -1,8 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { AuthContextProvider } from 'providers/AuthProvider';
 import {
+  AllLorePage,
   CreateFragranceMixPage,
   CreateFragranceOilPage,
+  CreateLorePage,
   CreateProductPage,
   FragranceMixesPage,
   FragranceMixPage,
@@ -11,7 +13,6 @@ import {
   HomePage,
   KanbanPage,
   LoginPage,
-  LorePage,
   MediaItemPage,
   MediaPage,
   ProductPage,
@@ -32,7 +33,10 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/kanban" element={<KanbanPage />} />
-                  <Route path="/fragrance-mixes" element={<FragranceMixesPage />} />
+                  <Route
+                    path="/fragrance-mixes"
+                    element={<FragranceMixesPage />}
+                  />
                   <Route
                     path="/fragrance-mixes/:fragranceMixId"
                     element={<FragranceMixPage />}
@@ -41,7 +45,10 @@ const App = () => {
                     path="/fragrance-mixes/create"
                     element={<CreateFragranceMixPage />}
                   />
-                  <Route path="/fragrance-oils" element={<FragranceOilsPage />} />
+                  <Route
+                    path="/fragrance-oils"
+                    element={<FragranceOilsPage />}
+                  />
                   <Route
                     path="/fragrance-oils/:fragranceOilId"
                     element={<FragranceOilPage />}
@@ -51,11 +58,18 @@ const App = () => {
                     element={<CreateFragranceOilPage />}
                   />
                   <Route path="/products" element={<ProductsPage />} />
-                  <Route path="/products/:productId" element={<ProductPage />} />
-                  <Route path="/products/create" element={<CreateProductPage />} />
+                  <Route
+                    path="/products/:productId"
+                    element={<ProductPage />}
+                  />
+                  <Route
+                    path="/products/create"
+                    element={<CreateProductPage />}
+                  />
                   <Route path="/media" element={<MediaPage />} />
                   <Route path="/media/:mediaId" element={<MediaItemPage />} />
-                  <Route path="/lore" element={<LorePage />} />
+                  <Route path="/lore" element={<AllLorePage />} />
+                  <Route path="/lore/create" element={<CreateLorePage />} />
                 </Routes>
               </Layout>
             }

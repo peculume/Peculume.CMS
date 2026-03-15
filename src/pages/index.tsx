@@ -20,4 +20,5 @@ export { default as ProductsPage } from './ProductsPage/ProductsPage';
 export { default as KanbanPage } from './kanban-page/KanbanPage';
 
 /* Content */
-export { default as LorePage } from './lore-pages/LorePage';
+export { default as AllLorePage } from './lore-pages/AllLorePage';
+export { default as CreateLorePage } from './lore-pages/CreateLorePage';
