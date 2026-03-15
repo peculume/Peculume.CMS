@@ -8,6 +8,7 @@ import {
 import { useUpdateFragranceMix } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 import { CategoryPicker } from 'components';
 import EditVersionForm from '../edit-version-form/EditVersionForm';
+import AddVersionForm from '../add-version-form/AddVersionForm';
 import styles from './EditFragranceMixForm.module.scss';
 
 type EditFragranceMixFormProps = {
@@ -26,6 +27,7 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
   );
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [showAddVersion, setShowAddVersion] = useState(false);
 
   const { updateFragranceMix, updateFragranceMixPending } =
     useUpdateFragranceMix({
@@ -97,13 +99,20 @@ const EditFragranceMixForm: FC<EditFragranceMixFormProps> = ({
               version={version}
             />
           ))}
-          <button
-            type="button"
-            className={styles.addVersionCard}
-            onClick={() => console.log('TODO: add version')}
-          >
-            +
-          </button>
+          {showAddVersion ? (
+            <AddVersionForm
+              fragranceMixId={fragranceMix.fragranceMixId}
+              onSuccess={() => setShowAddVersion(false)}
+            />
+          ) : (
+            <button
+              type="button"
+              className={styles.addVersionCard}
+              onClick={() => setShowAddVersion(true)}
+            >
+              +
+            </button>
+          )}
         </div>
       </div>
     </form>

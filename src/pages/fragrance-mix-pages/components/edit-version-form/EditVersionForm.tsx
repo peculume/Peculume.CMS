@@ -1,14 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import {
-  FragranceMix,
-  FragranceMixVersionOil,
-  FragranceOil,
-} from 'types/fragranceTypes';
+import { FragranceMix, FragranceOil } from 'types/fragranceTypes';
 import { useGetFragranceOils } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
-import styles from './EditVersionForm.module.scss';
-import { useUpdateFragranceMixVersion } from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
+import {
+  useUpdateFragranceMixVersion,
+  useCreateFragranceMixVersion,
+} from 'pages/fragrance-mix-pages/hooks/FragranceMixHooks';
 import FragranceOilPicker from '../fragrance-oil-picker/FragranceOilPicker';
+import styles from './EditVersionForm.module.scss';
 
 type EditVersionFormProps = {
   fragranceMixId: number;
@@ -30,6 +29,23 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
       onSuccess: (data) => {},
       onError: (error) => {},
     });
+
+  const { createFragranceMixVersion, createFragranceMixVersionPending } =
+    useCreateFragranceMixVersion({
+      onSuccess: () => {},
+      onError: () => {},
+    });
+
+  const handleDuplicate = () => {
+    createFragranceMixVersion({
+      fragranceMixId,
+      notes: version.notes,
+      oils: version.fragranceOils.map(({ fragranceOilId, mixRatio }) => ({
+        fragranceOilId,
+        mixRatio,
+      })),
+    });
+  };
 
   useEffect(() => {
     const filtered = allFragranceOils.filter(
@@ -74,20 +90,6 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
     e.target.selectedIndex = 0;
   };
 
-  const handleRemoveItem = (itemToRemove: FragranceMixVersionOil) => {
-    setFragranceOils((prev) =>
-      prev.filter(
-        (item) => item.fragranceOilId !== itemToRemove.fragranceOilId,
-      ),
-    );
-    setAvailableOils((prev) => [
-      ...prev,
-      allFragranceOils.find(
-        (item) => item.fragranceOilId === itemToRemove.fragranceOilId,
-      )!,
-    ]);
-  };
-
   const handleOnSubmit = () => {
     updateFragranceMixVersion({
       fragranceMixId: fragranceMixId,
@@ -130,6 +132,13 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
         onClick={handleOnSubmit}
       >
         Update version
+      </button>
+      <button
+        type="button"
+        disabled={createFragranceMixVersionPending}
+        onClick={handleDuplicate}
+      >
+        Duplicate version
       </button>
     </div>
   );

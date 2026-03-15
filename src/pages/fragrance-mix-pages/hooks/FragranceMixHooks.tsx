@@ -39,6 +39,15 @@ type UpdateFragranceMixVerionProps = {
   }[];
 };
 
+type CreateFragranceMixVersionProps = {
+  fragranceMixId: number;
+  notes: string;
+  oils: {
+    fragranceOilId: number;
+    mixRatio: number;
+  }[];
+};
+
 type FragranceMixVersionWithFragranceMixId = FragranceMixVersion & {
   fragranceMixId: number;
 };
@@ -283,6 +292,58 @@ const useUpdateFragranceMixVersion = ({
   };
 };
 
+const useCreateFragranceMixVersion = ({
+  onSuccess,
+  onError,
+}: mutationProps<FragranceMixVersion>) => {
+  const queryClient = useQueryClient();
+  const { token } = useAuth();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (props: CreateFragranceMixVersionProps) => {
+      if (!token) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+      const response = await fetch(
+        `${API_BASE_URL}/fragrance-mixes/${props.fragranceMixId}/version`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+          },
+          body: JSON.stringify(props),
+        },
+      );
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      return (await response.json()) as FragranceMixVersion;
+    },
+    onSuccess: (data, props) => {
+      queryClient.invalidateQueries({
+        queryKey: ['getFragranceMix', props.fragranceMixId.toString()],
+      });
+      queryClient.invalidateQueries({ queryKey: ['getFragranceMixes'] });
+      onSuccess?.(data);
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    createFragranceMixVersion: mutate,
+    createFragranceMixVersionPending: isPending,
+  };
+};
+
 const useDeleteFragranceMix = ({
   onSuccess,
   onError,
@@ -335,6 +396,7 @@ export {
   useUpdateFragranceMix,
   useUpdateFragranceMixStatus,
   useUpdateFragranceMixVersion,
+  useCreateFragranceMixVersion,
   useGetFragranceMixes,
   useDeleteFragranceMix,
 };
