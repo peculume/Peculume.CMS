@@ -8,6 +8,7 @@ const FragranceMixesCard = ({
 }: {
   fragranceMix: FragranceMix;
 }) => {
+  const latestVersion = fragranceMix.versions[fragranceMix.versions.length - 1];
   return (
     <Link to={`/fragrance-mixes/${fragranceMix.fragranceMixId}`}>
       <div className={styles.fragranceMixCard}>
@@ -26,23 +27,26 @@ const FragranceMixesCard = ({
         </div>
         <p>{fragranceMix.notes}</p>
 
-        <p className={styles.oilsHeader}>Versions:</p>
         <div>
-          {fragranceMix.versions.map((version) => (
-            <div key={version.fragranceMixVersionId} id={version.version}>
-              <p>
-                <b>V</b>
-                {version.version}
+          {latestVersion && (
+            <>
+              <p className={styles.oilsHeader}>
+                Latest Version - V{latestVersion.version}
               </p>
-              {version.fragranceOils.map((oil) => (
-                <div key={oil.fragranceOilId} className={styles.oilLine}>
-                  <span className={styles.oilName}>{oil.name}</span>
-                  {' — '}
-                  <span>Ratio: {oil.mixRatio}</span>
-                </div>
-              ))}
-            </div>
-          ))}
+              <div
+                key={latestVersion.fragranceMixVersionId}
+                id={latestVersion.version}
+              >
+                {latestVersion.fragranceOils.map((oil) => (
+                  <div key={oil.fragranceOilId} className={styles.oilLine}>
+                    <span className={styles.oilName}>{oil.name}</span>
+                    {' — '}
+                    <span>Ratio: {oil.mixRatio}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Link>
