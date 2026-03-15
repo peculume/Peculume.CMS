@@ -38,6 +38,7 @@ export type FragranceMixVersion = {
   fragranceMixVersionId: number;
   version: string;
   notes: string;
+  rating: number;
   createdAt: string;
   lastTestedAt: string | null;
   fragranceOils: FragranceMixVersionOil[];

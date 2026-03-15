@@ -18,6 +18,7 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
   version,
 }) => {
   const [notes, setNotes] = useState(version.notes);
+  const [rating, setRating] = useState(version.rating);
   const [fragranceOils, setFragranceOils] = useState(version.fragranceOils);
 
   const [availableOils, setAvailableOils] = useState<FragranceOil[]>([]);
@@ -40,6 +41,7 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
     createFragranceMixVersion({
       fragranceMixId,
       notes: version.notes,
+      rating: version.rating,
       oils: version.fragranceOils.map(({ fragranceOilId, mixRatio }) => ({
         fragranceOilId,
         mixRatio,
@@ -94,7 +96,8 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
     updateFragranceMixVersion({
       fragranceMixId: fragranceMixId,
       fragranceMixVersionId: version.fragranceMixVersionId,
-      notes: notes,
+      notes,
+      rating,
       oils: fragranceOils,
     });
   };
@@ -115,6 +118,20 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
           type="text"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.notesGroup}>
+        <label htmlFor={`rating-${version.fragranceMixVersionId}`}>
+          Rating
+        </label>
+        <input
+          id={`rating-${version.fragranceMixVersionId}`}
+          type="number"
+          value={rating}
+          min={0}
+          max={5}
+          onChange={(e) => setRating(Number(e.target.value))}
         />
       </div>
 

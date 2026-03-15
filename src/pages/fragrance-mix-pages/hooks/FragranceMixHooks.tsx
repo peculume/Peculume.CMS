@@ -33,6 +33,7 @@ type UpdateFragranceMixVerionProps = {
   fragranceMixId: number;
   fragranceMixVersionId: number;
   notes: string;
+  rating: number;
   oils: {
     fragranceOilId: number;
     mixRatio: number;
@@ -42,6 +43,7 @@ type UpdateFragranceMixVerionProps = {
 type CreateFragranceMixVersionProps = {
   fragranceMixId: number;
   notes: string;
+  rating: number;
   oils: {
     fragranceOilId: number;
     mixRatio: number;
