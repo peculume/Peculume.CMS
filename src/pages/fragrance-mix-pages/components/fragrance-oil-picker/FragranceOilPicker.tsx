@@ -122,7 +122,7 @@ const FragranceOilPicker: FC<FragranceOilPickerProps> = ({
               handleOilSelect(selectedItem);
             }
           }}
-          getOptionLabel={(e) => e.name}
+          getOptionLabel={(e) => `${e.name} - ${e.brand}`}
           getOptionValue={(e) => e.fragranceOilId.toString()}
           placeholder="Select an oil..."
           label="fragrance-oils"
