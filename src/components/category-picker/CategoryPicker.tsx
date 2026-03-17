@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { FragranceCategory } from 'types/fragranceTypes';
 import { CreateFragranceCategoryModal, SearchableComboBox } from 'components';
 import { useGetFragranceCategories } from 'pages/fragrance-oil-pages/hooks/FragranceOilHooks';
@@ -16,29 +16,15 @@ const CategoryPicker: FC<CategoryPickerProps> = ({
   setSelectedCategories,
   canCreate = false,
 }) => {
-  const [availableCategories, setAvailableCategories] = useState<
-    FragranceCategory[]
-  >([]);
+  const { fragranceOilCategories } = useGetFragranceCategories();
 
-  const { fragranceOilCategories: dataFragranceOilCategories } =
-    useGetFragranceCategories();
-
-  useEffect(() => {
-    const filtered = dataFragranceOilCategories.filter(
-      (categories) =>
-        !selectedCategories.some((c) => c.categoryId === categories.categoryId),
-    );
-    setAvailableCategories(filtered);
-  }, [dataFragranceOilCategories]);
+  const availableCategories = fragranceOilCategories.filter(
+    (category) =>
+      !selectedCategories.some((c) => c.categoryId === category.categoryId),
+  );
 
   const handleSelectCategories = (categories: FragranceCategory[]) => {
     setSelectedCategories((prev) => [...prev, ...categories]);
-    setAvailableCategories((prev) =>
-      prev.filter(
-        (category) =>
-          !categories.some((c) => category.categoryId === c.categoryId),
-      ),
-    );
   };
 
   const handleRemoveCategory = (categoryToRemove: FragranceCategory) => {
@@ -47,7 +33,6 @@ const CategoryPicker: FC<CategoryPickerProps> = ({
         (category) => category.categoryId !== categoryToRemove.categoryId,
       ),
     );
-    setAvailableCategories((prev) => [...prev, categoryToRemove]);
   };
 
   return (

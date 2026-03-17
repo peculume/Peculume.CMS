@@ -2,10 +2,12 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { AuthContextProvider } from 'providers/AuthProvider';
 import {
   AllLorePage,
+  AllPrototypesPage,
   CreateFragranceMixPage,
   CreateFragranceOilPage,
   CreateLorePage,
   CreateProductPage,
+  CreatePrototypePage,
   FragranceMixesPage,
   FragranceMixPage,
   FragranceOilPage,
@@ -17,6 +19,7 @@ import {
   MediaPage,
   ProductPage,
   ProductsPage,
+  PrototypePage,
 } from 'pages';
 import { Layout } from 'components';
 
@@ -65,6 +68,15 @@ const App = () => {
                   <Route
                     path="/products/create"
                     element={<CreateProductPage />}
+                  />
+                  <Route path="/prototypes" element={<AllPrototypesPage />} />
+                  <Route
+                    path="/prototypes/:prototypeId"
+                    element={<PrototypePage />}
+                  />
+                  <Route
+                    path="/prototypes/create"
+                    element={<CreatePrototypePage />}
                   />
                   <Route path="/media" element={<MediaPage />} />
                   <Route path="/media/:mediaId" element={<MediaItemPage />} />

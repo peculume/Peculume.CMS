@@ -22,3 +22,8 @@ export { default as KanbanPage } from './kanban-page/KanbanPage';
 /* Content */
 export { default as AllLorePage } from './lore-pages/AllLorePage';
 export { default as CreateLorePage } from './lore-pages/CreateLorePage';
+
+/* Prototypes */
+export { default as AllPrototypesPage } from './prototypes-pages/AllPrototypesPage';
+export { default as CreatePrototypePage } from './prototypes-pages/CreatePrototypePage';
+export { default as PrototypePage } from './prototypes-pages/PrototypePage';
