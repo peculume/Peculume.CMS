@@ -125,8 +125,7 @@ const PrototypeForm: FC<PrototypeFormProps> = ({ prototype }) => {
     };
 
     if (isEditing) {
-      alert('Updating prototypes is not currently supported');
-      // updatePrototype({ prototypeId: prototype.prototypeId, ...payload });
+      updatePrototype({ prototypeId: prototype.prototypeId, ...payload });
     } else {
       createPrototype(payload);
     }

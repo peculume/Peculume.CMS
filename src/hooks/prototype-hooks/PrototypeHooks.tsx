@@ -109,6 +109,18 @@ type CreatePrototypeProps = {
   fragranceMixIds: number[];
 };
 
+type UpdatePrototypeProps = {
+  prototypeId: number;
+  name: string;
+  description: string;
+  notes: string;
+  productTypeId: number;
+  loreEntryId: number | null;
+  statusId: number | null;
+  categoryIds: number[];
+  fragranceMixIds: number[];
+};
+
 const useCreatePrototype = ({
   onSuccess,
   onError,
@@ -239,34 +251,28 @@ const useGetPrototypeStatuses = () => {
   };
 };
 
-type UpdatePrototypeProps = {
-  prototypeId: number;
-  name: string;
-  description: string;
-  notes: string;
-  productTypeId: number;
-  loreEntryId: number | null;
-  statusId: number | null;
-  categoryIds: number[];
-  fragranceMixIds: number[];
-};
-
-const useUpdatePrototype = ({ onSuccess, onError }: mutationProps<Prototype>) => {
+const useUpdatePrototype = ({
+  onSuccess,
+  onError,
+}: mutationProps<Prototype>) => {
   const queryClient = useQueryClient();
   const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (props: UpdatePrototypeProps) => {
       if (!token) throw { message: 'Not authenticated' };
-      const response = await fetch(`${API_BASE_URL}/prototype/${props.prototypeId}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `bearer ${token}`,
+      const response = await fetch(
+        `${API_BASE_URL}/prototype/${props.prototypeId}`,
+        {
+          method: 'PUT',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+          },
+          body: JSON.stringify(props),
         },
-        body: JSON.stringify(props),
-      });
+      );
       if (!response.ok) {
         const error = (await response.json()) as ApiError;
         throw error;
@@ -275,7 +281,9 @@ const useUpdatePrototype = ({ onSuccess, onError }: mutationProps<Prototype>) =>
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['getPrototypes'] });
-      queryClient.invalidateQueries({ queryKey: ['getPrototypeById', data.prototypeId] });
+      queryClient.invalidateQueries({
+        queryKey: ['getPrototypeById', data.prototypeId],
+      });
       onSuccess?.(data);
     },
     onError: (error: ApiError) => {
@@ -289,7 +297,11 @@ const useUpdatePrototype = ({ onSuccess, onError }: mutationProps<Prototype>) =>
   };
 };
 
-const useDeletePrototype = ({ onError }: { onError?: (error: ApiError) => void }) => {
+const useDeletePrototype = ({
+  onError,
+}: {
+  onError?: (error: ApiError) => void;
+}) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { token } = useAuth();
