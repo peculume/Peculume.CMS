@@ -40,7 +40,7 @@ const AddVersionForm: FC<AddVersionFormProps> = ({
   };
 
   return (
-    <div className={styles.versionCard}>
+    <div className="card">
       <div className={styles.notesGroup}>
         <label htmlFor={`add-version-notes-${fragranceMixId}`}>Notes</label>
         <input

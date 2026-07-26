@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import { Link } from 'react-router';
-import { Prototype, PrototypeStatus } from 'hooks/prototype-hooks/PrototypeHooks';
+import {
+  Prototype,
+  PrototypeStatus,
+} from 'hooks/prototype-hooks/PrototypeHooks';
 import styles from './PrototypeCard.module.scss';
 
 type PrototypeCardProps = {
@@ -15,14 +18,11 @@ const PrototypeCard: FC<PrototypeCardProps> = ({ prototype, status }) => {
   );
 
   return (
-    <Link to={`/prototypes/${prototype.prototypeId}`} className={styles.card}>
-      <div className={styles.cardHeader}>
+    <Link to={`/prototypes/${prototype.prototypeId}`} className="card">
+      <div className="cardHeader">
         <p className={styles.name}>{prototype.name}</p>
         {status && (
-          <span
-            className={styles.statusPill}
-            style={{ background: `#${status.colourHex}` }}
-          >
+          <span className="pill" style={{ background: `#${status.colourHex}` }}>
             {status.name}
           </span>
         )}

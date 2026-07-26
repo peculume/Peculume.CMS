@@ -103,10 +103,10 @@ const EditVersionForm: FC<EditVersionFormProps> = ({
   };
 
   return (
-    <div className={styles.versionCard}>
-      <div className={styles.versionHeader}>
-        <span className={styles.versionTitle}>Version {version.version}</span>
-        <span className={styles.versionDate}>
+    <div className="card">
+      <div className="cardHeader">
+        <p>Version {version.version}</p>
+        <span className="pill">
           {format(new Date(version.createdAt), 'dd MMM yyyy HH:mm')}
         </span>
       </div>
