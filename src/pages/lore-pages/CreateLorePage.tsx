@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import LoreForm from './components/LoreFrom';
+import LoreForm from './components/LoreForm';
 
 const CreateFragranceMixPage = () => {
   const navigate = useNavigate();

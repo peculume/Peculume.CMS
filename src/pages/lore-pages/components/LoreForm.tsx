@@ -1,16 +1,36 @@
-import { FormEvent, useState } from 'react';
-import { useCreateLore, useGetLoreTypes } from 'hooks/lore-hooks/LoreHooks';
+import { FC, FormEvent, useState } from 'react';
+import {
+  Lore,
+  useCreateLore,
+  useGetLoreTypes,
+  useUpdateLore,
+} from 'hooks/lore-hooks/LoreHooks';
 
-const LoreForm = () => {
-  const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
-  const [description, setDescription] = useState('');
-  const [loreTypeId, setLoreTypeId] = useState<number>(-1);
+type LoreFormProps = {
+  lore?: Lore;
+};
+
+const LoreForm: FC<LoreFormProps> = ({ lore }) => {
+  const [name, setName] = useState(lore?.name ?? '');
+  const [slug, setSlug] = useState(lore?.slug ?? '');
+  const [description, setDescription] = useState(lore?.description ?? '');
+  const [loreTypeId, setLoreTypeId] = useState<number>(
+    lore?.loreType.loreTypeId ?? -1,
+  );
 
   const [errorMessage, setErrorMessage] = useState('');
 
   const { createLore, createLorePending } = useCreateLore({
     onSuccess: () => {},
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+  });
+
+  const { updateLore, updateLorePending } = useUpdateLore({
+    onSuccess: () => {
+      setErrorMessage('');
+    },
     onError: (error) => {
       setErrorMessage(error.message);
     },
@@ -36,6 +56,17 @@ const LoreForm = () => {
     }
 
     setErrorMessage('');
+
+    if (lore) {
+      updateLore({
+        loreId: lore.loreId,
+        name,
+        slug,
+        description,
+        loreTypeId,
+      });
+      return;
+    }
 
     createLore({
       name,
@@ -94,7 +125,7 @@ const LoreForm = () => {
             className="submitButton"
             type="submit"
             value="Save"
-            disabled={createLorePending}
+            disabled={createLorePending || updateLorePending}
           />
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}

@@ -13,6 +13,7 @@ export type LoreType = {
 export type Lore = {
   loreId: number;
   name: string;
+  slug: string;
   description: string;
   loreType: LoreType;
 };
@@ -22,6 +23,10 @@ export type CreateLoreProps = {
   slug: string;
   description: string;
   loreTypeId: number;
+};
+
+export type UpdateLoreProps = CreateLoreProps & {
+  loreId: number;
 };
 
 const useCreateLore = ({ onSuccess, onError }: mutationProps<Lore>) => {
@@ -107,6 +112,93 @@ const useGetLore = () => {
   };
 };
 
+const useGetLoreById = (loreId?: string) => {
+  const {
+    data,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['getLore', loreId],
+    enabled: !!loreId,
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/lore/${loreId}`, {
+        method: 'GET',
+        headers: {
+          'X-Build-Time-Api-Key': BUILD_TIME_API_KEY,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch lore');
+      }
+      return (await response.json()) as Lore;
+    },
+  });
+
+  return {
+    lore: data,
+    loreLoading: isLoading,
+    loreError: error,
+  };
+};
+
+const useUpdateLore = ({ onSuccess, onError }: mutationProps<Lore>) => {
+  const queryClient = useQueryClient();
+  const { token } = useAuth();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async ({
+      loreId,
+      name,
+      slug,
+      description,
+      loreTypeId,
+    }: UpdateLoreProps) => {
+      if (!token) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+
+      const response = await fetch(`${API_BASE_URL}/lore/${loreId}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name,
+          slug,
+          description,
+          loreTypeId,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      return (await response.json()) as Lore;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['getLore'] });
+      queryClient.invalidateQueries({
+        queryKey: ['getLore', data.loreId.toString()],
+      });
+      onSuccess?.(data);
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    updateLore: mutate,
+    updateLorePending: isPending,
+  };
+};
+
 const useGetLoreTypes = () => {
   const {
     data = [],
@@ -136,4 +228,10 @@ const useGetLoreTypes = () => {
   };
 };
 
-export { useCreateLore, useGetLore, useGetLoreTypes };
+export {
+  useCreateLore,
+  useGetLore,
+  useGetLoreById,
+  useGetLoreTypes,
+  useUpdateLore,
+};
