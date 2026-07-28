@@ -1,0 +1,37 @@
+.versionPill,
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 24px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.versionPill {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.statusPill {
+  background: #f1f3f5;
+  color: #495057;
+}
+
+.active {
+  background: #e6f4ea;
+  color: #1b5e20;
+}
+
+.retired,
+.archived {
+  background: #f1f3f5;
+  color: #6c757d;
+}
+
+.draft {
+  background: #fff4d6;
+  color: #7a4f01;
+}

@@ -1,7 +1,19 @@
 import { FC, FormEvent, useEffect, useRef, useState } from "react";
-import { ApiError, Media, Product, ProductType, Tag } from "types/productTypes";
+import {
+  ApiError,
+  Media,
+  Product,
+  ProductFragranceMixVersion,
+  ProductType,
+  Tag,
+} from "types/productTypes";
 import { getImage, uploadImage } from "utils/supabaseUtils";
-import { useCreateProduct, useDeleteProduct, useUpdateProduct } from "hooks/ProductHooks/ProductHooks";
+import {
+  useCreateProduct,
+  useCreateProductVersion,
+  useDeleteProduct,
+  useUpdateProduct,
+} from "hooks/ProductHooks/ProductHooks";
 import { useGetTags } from "hooks/TagHooks/TagHooks";
 import { useCreateImage } from "hooks/MediaHooks/MediaHooks";
 import CreateTagModal from "modals/CreateTagModal/CreateTagModal";
@@ -10,6 +22,7 @@ import { Image } from "components";
 import styles from "./ProductForm.module.scss";
 import CreateProductTypeModal from "modals/CreateProductTypeModal/CreateProductTypeModal";
 import SelectMediaModal from "modals/SelectMediaModal/SelectMediaModal";
+import { useGetFragranceMixes } from "pages/fragrance-mix-pages/hooks/FragranceMixHooks";
 
 type ProductFormTypes = {
   product?: Product;
@@ -24,12 +37,35 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
   const [tags, setTags] = useState(product?.tags ?? []);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [price, setPrice] = useState<number>(product?.price ?? 9.99);
+  const [fragranceMixVersions, setFragranceMixVersions] = useState<
+    ProductFragranceMixVersion[]
+  >(product?.activeVersion?.fragranceMixVersions ?? []);
 
   const [errorMessage, setErrorMessage] = useState("");
 
   const { tags: dataTags } = useGetTags();
 
   const { productTypes, isProductTypesLoading } = useGetProductTypes();
+  const { fragranceMixes } = useGetFragranceMixes();
+
+  const availableFragranceMixVersions = fragranceMixes
+    .flatMap((mix) =>
+      mix.versions.map((version) => ({
+        fragranceMixId: mix.fragranceMixId,
+        fragranceMixName: mix.name,
+        fragranceMixVersionId: version.fragranceMixVersionId,
+        version: version.version,
+        notes: version.notes,
+        fragranceOils: version.fragranceOils,
+      })),
+    )
+    .filter(
+      (version) =>
+        !fragranceMixVersions.some(
+          (selected) =>
+            selected.fragranceMixVersionId === version.fragranceMixVersionId,
+        ),
+    );
 
   useEffect(() => {
     const filtered = dataTags.filter(tag => !tags.some(t => t.tagId === tag.tagId));
@@ -53,6 +89,16 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
       setErrorMessage(error.message);
     }
   });
+
+  const { createProductVersion, createProductVersionPending } =
+    useCreateProductVersion({
+      onSuccess: () => {
+        setErrorMessage("");
+      },
+      onError: (error: ApiError) => {
+        setErrorMessage(error.message);
+      },
+    });
 
   const { deleteProduct } = useDeleteProduct({
     onError: (error: ApiError) => {
@@ -116,6 +162,29 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
     setAvailableTags(prev => [...prev, tagToRemove]);
   };
 
+  const handleFragranceMixVersionSelect = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedVersionId = Number(e.target.value);
+    const selectedVersion = availableFragranceMixVersions.find(
+      (version) => version.fragranceMixVersionId === selectedVersionId,
+    );
+    if (selectedVersion) {
+      setFragranceMixVersions((prev) => [...prev, selectedVersion]);
+    }
+    e.target.selectedIndex = 0;
+  };
+
+  const handleRemoveFragranceMixVersion = (
+    fragranceMixVersionId: number,
+  ) => {
+    setFragranceMixVersions((prev) =>
+      prev.filter(
+        (version) => version.fragranceMixVersionId !== fragranceMixVersionId,
+      ),
+    );
+  };
+
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -133,7 +202,10 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         media,
         productType,
         tags,
-        price
+        price,
+        fragranceMixVersionIds: fragranceMixVersions.map(
+          ({ fragranceMixVersionId }) => fragranceMixVersionId,
+        ),
       });
     } else {
       createProduct({
@@ -144,9 +216,30 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
         productType,
         tags,
         price,
+        fragranceMixVersionIds: fragranceMixVersions.map(
+          ({ fragranceMixVersionId }) => fragranceMixVersionId,
+        ),
       });
     }
   }
+
+  const handleCreateNewVersion = () => {
+    if (!product) {
+      return;
+    }
+
+    createProductVersion({
+      productId: product.productId,
+      name,
+      slug,
+      description,
+      price,
+      fragranceMixVersionIds: fragranceMixVersions.map(
+        ({ fragranceMixVersionId }) => fragranceMixVersionId,
+      ),
+      activate: true,
+    });
+  };
 
   return (
     <form className={styles.form} onSubmit={handleOnSubmit}>
@@ -266,12 +359,61 @@ const ProductForm: FC<ProductFormTypes> = ({ product }) => {
           <input id="price" type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
         </div>
       </div>
+      <div className="formGroup">
+        <label htmlFor="fragranceMixVersions">Fragrance Mix Versions</label>
+        <div className={styles.tagSelector}>
+          <select
+            id="fragranceMixVersions"
+            onChange={handleFragranceMixVersionSelect}
+          >
+            <option value="">Select a fragrance mix version...</option>
+            {availableFragranceMixVersions.map((version) => (
+              <option
+                key={version.fragranceMixVersionId}
+                value={version.fragranceMixVersionId}
+              >
+                {version.fragranceMixName} v{version.version}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className={styles.selectedTags}>
+          {fragranceMixVersions.map((version) => (
+            <div
+              key={version.fragranceMixVersionId}
+              className={styles.tagItem}
+            >
+              {version.fragranceMixName} v{version.version}
+              <button
+                type="button"
+                className={styles.removeTagButton}
+                onClick={() =>
+                  handleRemoveFragranceMixVersion(
+                    version.fragranceMixVersionId,
+                  )
+                }
+              >
+                x
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
       <div>
         <div className={styles.buttonsContainer}>
           {product && (
-            <button className="danger" onClick={() => deleteProduct({ productId: product.productId })}>Delete</button>
+            <button type="button" className="danger" onClick={() => deleteProduct({ productId: product.productId })}>Delete</button>
           )}
-          <input className={styles.submitButton} type="submit" value="Save" disabled={createProductPending || updateProductPending} />
+          {product && (
+            <button
+              type="button"
+              onClick={handleCreateNewVersion}
+              disabled={createProductVersionPending}
+            >
+              Save as new version
+            </button>
+          )}
+          <input className={styles.submitButton} type="submit" value="Save" disabled={createProductPending || updateProductPending || createProductVersionPending} />
         </div>
         {errorMessage && (
           <p className="error">{errorMessage}</p>

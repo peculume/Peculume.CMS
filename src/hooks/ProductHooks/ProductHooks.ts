@@ -13,10 +13,21 @@ type CreateProductProps = {
   productType: ProductType;
   tags: Tag[];
   price: number;
+  fragranceMixVersionIds: number[];
 };
 
 type UpdateProductProps = CreateProductProps & {
   productId: number;
+};
+
+type CreateProductVersionProps = {
+  productId: number;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  fragranceMixVersionIds: number[];
+  activate: boolean;
 };
 
 const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
@@ -33,6 +44,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       productType,
       tags,
       price,
+      fragranceMixVersionIds,
     }: CreateProductProps) => {
       if (!token) {
         throw {
@@ -54,6 +66,7 @@ const useCreateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           productTypeId: productType.productTypeId,
           tagIds: tags.map(({ tagId }) => tagId),
           price,
+          fragranceMixVersionIds,
         }),
       });
 
@@ -94,6 +107,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
       productType,
       tags,
       price,
+      fragranceMixVersionIds,
     }: UpdateProductProps) => {
       if (!token) {
         throw {
@@ -116,6 +130,7 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
           productTypeId: productType.productTypeId,
           tagIds: tags.map(({ tagId }) => tagId),
           price,
+          fragranceMixVersionIds,
         }),
       });
 
@@ -142,6 +157,73 @@ const useUpdateProduct = ({ onSuccess, onError }: mutationProps<Product>) => {
   return {
     updateProduct: mutate,
     updateProductPending: isPending,
+  };
+};
+
+const useCreateProductVersion = ({
+  onSuccess,
+  onError,
+}: mutationProps<Product>) => {
+  const queryClient = useQueryClient();
+  const { token } = useAuth();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async ({
+      productId,
+      name,
+      slug,
+      description,
+      price,
+      fragranceMixVersionIds,
+      activate,
+    }: CreateProductVersionProps) => {
+      if (!token) {
+        throw {
+          message: 'Not authenticated',
+        };
+      }
+      const response = await fetch(
+        `${API_BASE_URL}/products/${productId}/versions`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            slug,
+            description,
+            price,
+            fragranceMixVersionIds,
+            activate,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const error = (await response.json()) as ApiError;
+        throw error;
+      }
+
+      return (await response.json()) as Product;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['getProduct', data.productId.toString()],
+      });
+      queryClient.invalidateQueries({ queryKey: ['getProducts'] });
+      onSuccess?.(data);
+    },
+    onError: (error: ApiError) => {
+      onError?.(error);
+    },
+  });
+
+  return {
+    createProductVersion: mutate,
+    createProductVersionPending: isPending,
   };
 };
 
@@ -213,4 +295,10 @@ const useGetProducts = (type?: string) => {
   };
 };
 
-export { useCreateProduct, useUpdateProduct, useDeleteProduct, useGetProducts };
+export {
+  useCreateProduct,
+  useUpdateProduct,
+  useDeleteProduct,
+  useGetProducts,
+  useCreateProductVersion,
+};

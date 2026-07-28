@@ -9,6 +9,39 @@ export type Product = {
   media: Media[];
   tags: Tag[];
   price: number;
+  activeVersionId: number | null;
+  activeVersion: ProductVersion | null;
+  versions: ProductVersion[];
+};
+
+export type ProductVersion = {
+  productVersionId: number;
+  version: string;
+  name: string;
+  slug: string;
+  description: string;
+  sku: string;
+  price: number;
+  status: 'Draft' | 'Active' | 'Retired' | 'Archived';
+  createdAt: string;
+  publishedAt: string | null;
+  retiredAt: string | null;
+  fragranceMixVersions: ProductFragranceMixVersion[];
+};
+
+export type ProductFragranceMixVersion = {
+  fragranceMixId: number;
+  fragranceMixName: string;
+  fragranceMixVersionId: number;
+  version: string;
+  notes: string;
+  fragranceOils: ProductFragranceOil[];
+};
+
+export type ProductFragranceOil = {
+  fragranceOilId: number;
+  name: string;
+  mixRatio: number;
 };
 
 export type ProductType = {
