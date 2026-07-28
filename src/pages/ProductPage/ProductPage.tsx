@@ -43,6 +43,7 @@ const ProductPage = () => {
   const [selectedVersionId, setSelectedVersionId] = useState<number | null>(
     null,
   );
+  const [showVersions, setShowVersions] = useState(false);
 
   const { data: product } = useQuery({
     queryKey: ["getProduct", productId],
@@ -90,13 +91,22 @@ const ProductPage = () => {
             <p className={styles.eyebrow}>Product versions</p>
             <h3>Current: {formatVersion(product.activeVersion?.version)}</h3>
           </div>
-          <span>
-            {previousVersionCount} previous{" "}
-            {previousVersionCount === 1 ? "version" : "versions"}
-          </span>
+          <div className={styles.versionBrowserActions}>
+            <span>
+              {previousVersionCount} previous{" "}
+              {previousVersionCount === 1 ? "version" : "versions"}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowVersions((current) => !current)}
+              aria-expanded={showVersions}
+            >
+              {showVersions ? "Hide versions" : "Show versions"}
+            </button>
+          </div>
         </div>
 
-        {versions.length > 0 && selectedVersion ? (
+        {showVersions && versions.length > 0 && selectedVersion ? (
           <div className={styles.versionBrowserContent}>
             <div className={styles.versionList}>
               {versions.map((version) => {
@@ -218,9 +228,9 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-        ) : (
+        ) : showVersions ? (
           <p className={styles.emptyVersions}>No versions recorded yet.</p>
-        )}
+        ) : null}
       </section>
       <ProductForm product={product} />
     </div>

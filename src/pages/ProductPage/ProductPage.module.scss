@@ -41,12 +41,6 @@
   }
 }
 
-.versionBrowserHeader > span {
-  color: #6c757d;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
 .eyebrow {
   margin: 0;
   color: #6c757d;
@@ -54,6 +48,32 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.versionBrowserActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  span {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  button {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #212529;
+
+    &:hover,
+    &:focus {
+      background: #e9ecef;
+      color: #212529;
+    }
+  }
 }
 
 .versionBrowserContent {
